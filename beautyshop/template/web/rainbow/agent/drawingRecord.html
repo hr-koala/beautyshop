@@ -1,0 +1,122 @@
+<include file="public/header" title="提现明细"  body="page-withdraw-detail"/>
+<link rel="stylesheet" type="text/css" href="__STATIC__/tonghaoran/css/common.css">
+<link rel="stylesheet" type="text/css" href="__STATIC__/tonghaoran/css/mr_style.css">
+
+<header id="header" class="">
+    <div class="icon-back" onclick="history.back()"></div>
+    <h5>提现明细</h5>
+</header>
+<div class="no-data">
+    <img src="__STATIC__/tonghaoran/images/icon_income_no.png">
+    <div class="no-data-txt">暂无！</div>
+</div>
+<div class="container has-data">
+    <div class="top">
+        <div class="num">￥<span>{$info['total_withdrawals']}</span></div>
+        <div class="name">共计提现</div>
+    </div>
+    <div class="main">
+        <div class="balance">
+            <div class="balance-lf">
+                <div class="balance-img">
+                    <img src="__STATIC__/tonghaoran/images/icon_tixian.png">
+                </div>
+                <div class="balance-txt">
+                    当前余额：<span>{$user_info['user_money']}</span>
+                </div>
+            </div>
+            <div class="balance-right" onclick="window.location.href='{$url}'">
+                <span>去提现</span>
+                <img src="__STATIC__/tonghaoran/images/icon_fanhui.png">
+            </div>
+        </div>
+       <!--  <div class="withdraw">
+            <div class="withdraw-lf">
+                <div class="withdraw-img">
+                    <img src="__STATIC__/tonghaoran/images/prod6.png">
+                </div>
+                <div class="withdraw-txt">
+                    <div class="withdraw-txt1">佣金提现</div>
+                    <div class="withdraw-txt-time">2018-12-13  09:04:40</div>
+                </div>
+            </div>
+            <div class="withdraw-right">
+                <div class="withdraw-right-num">-200.00</div>
+                <div class="withdraw-right-txt">提现成功</div>
+            </div>
+        </div> -->
+        <!-- <div class="withdraw">
+            <div class="withdraw-lf">
+                <div class="withdraw-img">
+                    <img src="__STATIC__/tonghaoran/images/prod6.png">
+                </div>
+                <div class="withdraw-txt">
+                    <div class="withdraw-txt1">佣金提现</div>
+                    <div class="withdraw-txt-time">2018-12-13  09:04:40</div>
+                </div>
+            </div>
+            <div class="withdraw-right">
+                <div class="withdraw-right-num">-200.00</div>
+                <div class="withdraw-right-txt">提现成功</div>
+            </div>
+        </div> -->
+        <!-- <div class="withdraw">
+            <div class="withdraw-lf">
+                <div class="withdraw-img">
+                    <img src="__STATIC__/tonghaoran/images/prod6.png">
+                </div>
+                <div class="withdraw-txt">
+                    <div class="withdraw-txt1">佣金提现</div>
+                    <div class="withdraw-txt-time">2018-12-13  09:04:40</div>
+                </div>
+            </div>
+            <div class="withdraw-right">
+                <div class="withdraw-right-num">-200.00</div>
+                <div class="withdraw-right-txt">提现成功</div>
+            </div>
+        </div> -->
+        <volist name="info['drawing_record']" id="list">
+            <div class="withdraw">
+                <div class="withdraw-lf">
+                    <div class="withdraw-img">
+                        <img src="<if condition='$user_info[head_pic] neq null'>{$user_info[head_pic]}<else />__STATIC__/tonghaoran/images/prod6.png</if>">
+                    </div>
+                    <div class="withdraw-txt">
+                        <div class="withdraw-txt1">佣金提现</div>
+                        <div class="withdraw-txt-time">{$list[create_time]|date='Y-m-d H:i:s',###}</div>
+                    </div>
+                </div>
+                <div class="withdraw-right">
+                    <div class="withdraw-right-num"><if condition="$list[status] eq 2">-</if>{$list[money]}</div>
+                    <div class="withdraw-right-txt">
+                        <if condition="$list[status] eq -2">删除作废
+                        <elseif condition="$list[status] eq -1" />审核失败
+                        <elseif condition="$list[status] eq 0" />申请中
+                        <elseif condition="$list[status] eq 1" />审核通过
+                        <elseif condition="$list[status] eq 2" />付款成功
+                        <elseif condition="$list[status] eq 3" />付款失败
+                        </if>
+                    </div>
+                </div>
+            </div>
+        </volist>
+    </div>
+
+</div>
+
+<include file="public/footer"/>
+<script>
+    $(function () {
+        console.log($(".top .num span").text())
+        if($(".top .num span").text() > 0){
+            $(".page-withdraw-detail .no-data").hide()
+            $(".page-withdraw-detail .has-data").show()
+        }else {
+            $(".page-withdraw-detail .no-data").show()
+            $(".page-withdraw-detail .has-data").hide()
+        }
+    })
+</script>
+
+</body>
+</html>

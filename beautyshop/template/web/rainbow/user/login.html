@@ -1,0 +1,134 @@
+<include file="public/header" title="登录"  body="page-login"/>
+    <header id="header" class="">
+        <a href="javascript:history.back(-1)"><div class="icon-back"></div></a>
+        <h5>登录</h5>
+    </header>
+
+    <div class="container" id="all">
+        <div class="main">
+            <div class="tit">填写以下信息完成众美平身h5的登陆</div>
+            <div class="inp-box flex-row">
+                <div class="left">
+                    <input type="text" name="" id="userphone" value="" placeholder="请输入手机号码">
+                </div>
+                <div class="icon i1"></div>
+            </div>
+            <div class="inp-box flex-row" v-if="!isShowPswFlag">
+                <div class="left">
+                    <input type="password" v-model="pswValue" name="" id="psw" placeholder="6-16位密码，不区分大小写">
+                </div>
+                <div class="icon i2" @click="showPswFun"></div>
+            </div>
+            <div class="inp-box flex-row" v-if="isShowPswFlag">
+                <div class="left">
+                    <input type="text" name="" v-model="pswValue"  value="" placeholder="6-16位密码，不区分大小写">
+                </div>
+                <div class="icon i3" @click="hidePswFun"></div>
+            </div>
+            <div class="tx flex-row">
+                <a href="{:U('cosmetology/User/register')}"><span>还没有账号？</span>立即注册</a>
+                <a href="{:U('cosmetology/User/forgot_psw')}">忘记密码？</a>
+            </div>
+        </div>
+
+        <div class="btn-box">
+            <button type="button" class="btn btn-submit">确认登陆</button>
+        </div>
+    </div>
+    
+</body>
+
+<script type="text/javascript" src="__STATIC__/js/dialog-plus-min.js"></script>
+<script type="text/javascript" src="__STATIC__/js/vue.js"></script>
+<script type="text/javascript" src="__STATIC__/js/jquery.cookie.js"></script>
+<script>
+$(function(){
+    vm = new Vue({
+        el: '#all',
+        data: {
+            isShowPswFlag: false, //是否显示密码
+            pswValue: '', //密码
+        },
+        methods: {
+            //显示密码
+            showPswFun: function(){
+                this.isShowPswFlag = true;
+            },
+            hidePswFun: function(){
+                this.isShowPswFlag = false;
+            }
+        }
+    })
+  
+    $('.btn-submit').on('click', function(){
+        var flag = flagFun();
+        if(flag){
+            var userphone = $('#userphone').val();
+            var psw = vm.$data.pswValue;
+            $.post("{:U('cosmetology/User/login')}", {userphone:userphone,psw:psw},function(datas){
+                var values = JSON.parse(datas);
+                if(values['status'] == 1){
+                    if("{$url}" != 0){
+                        var url = "{$url}";
+                    }else{
+                        var url = "{:U('cosmetology/Index/index')}";
+                    }
+                    // dialogFun(values['msg'],"{:U('cosmetology/Index/index')}");
+                    dialogFun(values['msg'],url);
+                }else{
+                    dialogFun(values['msg']);
+                }
+            });
+        }
+    })
+
+})
+
+//判断是否都有输入
+function flagFun(){
+    var userphone = $('#userphone').val();
+    var psw = vm.$data.pswValue;
+    if(userphone === ''){
+        dialogFun('请输入您的手机号');
+        return false;
+    }
+    var reg = /0?(13|14|15|17|18|19)[0-9]{9}/g;
+    if(!reg.test(userphone) || userphone.length != 11){
+        dialogFun('手机号码格式有误');
+        return false;
+    }
+    if(psw === ''){
+        dialogFun('请输入密码');
+        return false;
+    }
+    return true;
+}
+
+
+function isTelFlag(){
+    var tel = $('#userphone').val();
+    var reg = /0?(13|14|15|17|18|19)[0-9]{9}/g;
+    if(reg.test(tel)){
+        return true;
+    }else{
+        return false;
+    }
+}
+
+function dialogFun(str,url=''){
+    dialog({
+        width: 280,
+        title: '提示',
+        content: str,
+        cancel: false,
+        okValue: '确定',
+        ok: function(){
+            if(url != ''){
+                window.location.href = url;
+            }
+        }
+    }).showModal();
+}
+
+</script>
+</html>

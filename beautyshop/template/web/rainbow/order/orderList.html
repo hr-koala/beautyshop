@@ -1,0 +1,172 @@
+<include file="public/header" title="我的订单" body="page-miorder"/>
+<link rel="stylesheet" type="text/css" href="__STATIC__/tonghaoran/css/common.css">
+<link rel="stylesheet" type="text/css" href="__STATIC__/tonghaoran/css/mr_style.css">
+<header id="header" class="">
+    <div class="icon-back" onclick="window.location.href='{:U('cosmetology/Mine/index')}'"></div>
+    <h5>我的订单</h5>
+</header>
+
+<div class="container">
+    <div class="head">
+        <ul class="flex-row">
+            <li data-index="0" class="{$pitch_on == 1?on:''}" onclick="window.location.href='{:U('cosmetology/Order/orderList')}'">全部</li>
+            <li data-index="1" class="{$pitch_on == 'WAITPAY'?on:''}" onclick="window.location.href='{:U('cosmetology/Order/orderList',['status'=>'WAITPAY'])}'">待付款</li>
+            <li data-index="2" class="{$pitch_on == 'WAITSEND'?on:''}" onclick="window.location.href='{:U('cosmetology/Order/orderList',['status'=>'WAITSEND'])}'">待发货</li>
+            <li data-index="3" class="{$pitch_on == 'WAITRECEIVE'?on:''}" onclick="window.location.href='{:U('cosmetology/Order/orderList',['status'=>'WAITRECEIVE'])}'">待收货</li>
+            <li data-index="4" class="{$pitch_on == 'FINISH'?on:''}" onclick="window.location.href='{:U('cosmetology/Order/orderList',['status'=>'FINISH'])}'">已完成</li>
+        </ul>
+    </div>
+
+    <div class="no-data"></div>
+    <div class="list has-data">
+        <volist name="order_list" id="list">
+            <div class="box">
+                <div class="tit flex-row">
+                    <div class="bianh">订单编号：{$list['order_sn']}</div>
+                    <div class="state">{:C('ORDER_STATUS_DESC')[$list[order_status_code]]}</div>
+                </div>
+                <!-- <div class="state">
+                    {$list['order_sn']}{$list['add_time']|date='Y-m-d H:i:s',###}
+                    {:C('ORDER_STATUS_DESC')[$list[order_status_code]]}</div> -->
+                
+                <ul>
+                    <volist name="list[goods_list]" id="goods">
+                        <li class="goods">
+                            <div class="item flex-row">
+                                <a href="{:U('cosmetology/Goods/details',['id'=>$goods['goods_id']])}">
+                                    <div class="img"><img src="{$goods['images']}" alt=""></div>
+                                    <div class="right flex-column">
+                                        <div class="name">{$goods['goods_name']}</div>
+                                        <div class="bot">
+                                            <neqempty name="{$goods['spec_key_name']}">
+                                                <div class="spec">规格:{$goods['spec_key_name']}</div>
+                                            </neqempty>
+                                            <div class="flex-row">
+                                                <div class="price">￥{$goods['member_goods_price']}</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="num">x{$goods['goods_num']}</div>
+                                </a>
+                            </div>
+                        </li>
+                    </volist>
+                </ul>
+
+                <div class="money"><div class=""> 共{$list['goods_count']}件商品</div>  <div class="money-total">合计:<span class="money-total-price">￥{$list['total_amount']}</span></div></div>
+                <div class="order-time">
+                    <div class=""> 订单时间：{$list['add_time']|date='Y-m-d H:i:s',###}</div>
+                </div>
+                <div class="btn-row">
+                    <if condition="$list[order_status_code] eq 'WAITPAY'">
+                        <button type="button" class="btn btn-cancel" id="cancels{$list['order_id']}">取消订单</button>
+                        <button type="button" class="btn bg-blue" onclick="window.location.href='{:U('cosmetology/Order/placeOrder',['order_id'=>$list['order_id']])}'">支付订单</button>
+                    </if>
+                    <if condition="($list[order_status_code] eq 'WAITRECEIVE') OR ($list[order_status_code] eq 'FINISH')">
+                        <button type="button" class="btn btn-logist" id="logist{$list[order_id]}">查看物流</button>
+                    </if>
+
+                    <if condition="$list[order_status_code] eq 'WAITRECEIVE'">
+                        <button type="button" class="btn confirm_receipt" id="receipt{$list[order_id]}">确认收货</button>
+                    </if>
+                    
+                    <button type="button" class="btn" onclick="window.location.href='{:U('cosmetology/Order/details',['order_id'=>$list['order_id']])}'">订单详情</button>
+
+                </div>
+            </div>
+        </volist>
+    </div>
+
+
+    <div class="wuliu"></div>
+    <div class="mask"></div>
+</div>
+<script type="text/javascript" src="__STATIC__/js/dialog-plus-min.js"></script>
+<include file="public/footer"/>
+</body>
+<script>
+$(function(){
+    $('.head ul li').on('click', function(){
+        var index = $(this).data('index')
+        $(this).addClass("on").siblings().removeClass('on')
+    })
+
+    $('.page-miorder .box .btn-cancel').on('click', function(){
+        dialogFun('确定取消订单？',$(this));
+    })
+
+    $('.box .btn-row .confirm_receipt').on('click', function(){
+        var order_id = $(this).attr('id').substring(7);
+        $.post("{:U('cosmetology/Order/confirm_receipt')}", {order_id:order_id},function(datas){
+            var values = JSON.parse(datas);
+            if(values.status == 1){
+                dialogFun_two('已收货')
+                window.location.reload()
+            }else{
+                dialogFun_two('收货失败')
+            }
+        });
+    })
+
+    boxlen()
+    function boxlen() {
+        if($(".page-miorder .box").length == 0){
+            $(".page-miorder .has-data").hide()
+            $(".page-miorder .no-data").show()
+        }else {
+            $(".page-miorder .has-data").show()
+            $(".page-miorder .no-data").hide()
+        }
+    }
+
+    $(".page-miorder .btn-logist").on("click",function () {
+        var order_id = $(this).attr('id').substring(6);
+        console.log(order_id)
+        $.post("{:U('cosmetology/Order/viewLogistics')}", {order_id:order_id},function(datas){
+            var values = JSON.parse(datas);
+            if(values.status == 1){
+                $(".page-miorder .wuliu").html(values.info)
+                $(".page-miorder .mask").show()
+                $(".page-miorder .wuliu").show()
+            }
+        });
+        
+    })
+
+    $(".wuliu ").on('click', '.bot-del img',function () {
+        $(".mask").hide()
+        $(".wuliu").hide()
+    })
+
+
+
+function dialogFun(str,inx){
+    dialog({
+        width: 280,
+        title: '提示',
+        content: str,
+        cancel: false,
+        okValue: '确定',
+        ok: function(){
+            var order_id = $(inx).attr('id').substring(7);
+            $.post("{:U('cosmetology/Order/cancelOrder')}", {order_id:order_id},function(datas){
+                var values = JSON.parse(datas);
+                if(values.status == 1){
+                    $(inx).parent().parent(".box").remove()
+                    boxlen()
+                    dialogFun_two('取消成功')
+                }else{
+                    dialogFun_two('取消失败')
+                }
+            });
+        }
+    }).showModal();
+}
+
+function dialogFun_two(str){
+    webToast(str,"middle",3000);
+}
+
+})
+</script>
+</html>

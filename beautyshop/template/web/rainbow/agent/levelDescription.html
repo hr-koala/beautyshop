@@ -1,0 +1,229 @@
+<include file="public/header" title="分销中心"  body="page-level"/>
+<link rel="stylesheet" type="text/css" href="__STATIC__/tonghaoran/css/common.css">
+<link rel="stylesheet" type="text/css" href="__STATIC__/tonghaoran/css/mr_style.css">
+
+<header id="header" class="">
+    <div class="icon-back" onclick="history.back()"></div>
+    <h5>等级说明</h5>
+</header>
+
+<div class="container">
+    <div class="top">
+        <div class="top-level">
+            <div class="top-box">
+                <div class="level-icon">
+                    <!--<div class="level-icon-img">
+                        <img src="__STATIC__/tonghaoran/images/icon_unit.png"/>
+                    </div>-->
+                    <div class="daili"></div>
+
+                    <div class="level-line"></div>
+                    <div class="daili">
+                        <div data-index="0" class="level-icon-img">
+                            <img src="__STATIC__/tonghaoran/images/icon_jingli.png"/>
+                        </div>
+                    </div>
+
+                    <div class="level-line"></div>
+                    <div class="daili">
+                        <div data-index="1" class="level-icon-img">
+                            <img src="__STATIC__/tonghaoran/images/icon_unit.png"/>
+                        </div>
+                    </div>
+
+                    <div class="level-line"></div>
+                    <div class="daili">
+                        <div data-index="2" class="level-icon-img">
+                            <img src="__STATIC__/tonghaoran/images/icon_zongjian.png"/>
+                        </div>
+                    </div>
+
+                    <div class="level-line"></div>
+                    <div class="daili">
+                        <div data-index="3" class="level-icon-img">
+                            <img src="__STATIC__/tonghaoran/images/icon_zongcai.png"/>
+                        </div>
+                    </div>
+
+                    <div class="level-line"></div>
+                    <div class="daili">
+                        <div data-index="4" class="level-icon-img">
+                            <img src="__STATIC__/tonghaoran/images/icon_gudong.png"/>
+                        </div>
+                    </div>
+                    <!--<div class="level-line"></div>-->
+                </div>
+                <div class="level-txt">
+                    <volist name="all_level" id="levels">
+                        <div class="daili-con">
+                            <div class="daili-txt">{$levels['level_name']}</div>
+                            <div class="daili-num">{$levels['lower_rank']}</div>
+                        </div>
+                    </volist>
+                </div>
+
+            </div>
+        </div>
+        <div class="name">
+            <if condition="$user_info[level] eq 2">
+                <if condition="$lack[team] neq ''">
+                    再加入{$lack[team]}名团队人数
+                </if>
+                <if condition="($lack[team] neq '') AND ($lack[agent] neq '')">,</if>
+                <if condition="$lack[agent] neq ''">
+                    再加入{$lack[agent]}名代理
+                </if>
+                <if condition="($lack[team] neq '') OR ($lack[agent] neq '')">
+                    成为{$all_level[$lack[upgrade]+1][level_name]}
+                </if>
+            <else />
+                <if condition="$lack[agent] neq ''">
+                    再加入{$lack[agent]}名{$all_level[$lack[upgrade]][level_name]}成为{$all_level[$lack[upgrade]+1][level_name]}
+                </if>
+            </if>
+        </div>
+    </div>
+    <div class="main" style="margin-bottom: 3rem;">
+        <div class="grade">
+            <div class="grade-tit">
+                    <img src="__STATIC__/tonghaoran/images/icon_grade.png">
+            </div>
+            <ul class="grade-con">
+                <volist name="all_level" id="levels">
+                    <if condition="$levels[level_id] neq 2">
+                        <li class="grade-box">
+                            <div class="grade-img">
+                                <if condition="$levels[level_id] eq 10">
+                                    <img src="__STATIC__/tonghaoran/images/icon_jingli.png">
+                                <elseif condition="$levels[level_id] eq 11" />
+                                    <img src="__STATIC__/tonghaoran/images/icon_buzhang.png">
+                                <elseif condition="$levels[level_id] eq 12" />
+                                    <img src="__STATIC__/tonghaoran/images/icon_zongjian.png">
+                                <elseif condition="$levels[level_id] eq 13" />
+                                    <img src="__STATIC__/tonghaoran/images/icon_zongcai.png">
+                                <elseif condition="$levels[level_id] eq 14" />
+                                    <img src="__STATIC__/tonghaoran/images/icon_gudong.png">
+                                </if>
+                            </div>
+                            <div class="grade-txt">
+                                <div class="grade-txt-name">{$levels[level_name]}</div>
+                                <div class="grade-txt-p">{$levels[describe]}</div>
+                            </div>
+                        </li>
+                    </if>
+                </volist>
+                <!-- <li class="grade-box">
+                    <div class="grade-img">
+                        <img src="__STATIC__/tonghaoran/images/icon_jingli.png">
+                    </div>
+                    <div class="grade-txt">
+                        <div class="grade-txt-name">销售经理</div>
+                        <div class="grade-txt-p">直推五名代理 团队达到二十五人  2%</div>
+                    </div>
+                </li>
+                <li class="grade-box">
+                    <div class="grade-img">
+                        <img src="__STATIC__/tonghaoran/images/icon_buzhang.png">
+                    </div>
+                    <div class="grade-txt">
+                        <div class="grade-txt-name">销售部长</div>
+                        <div class="grade-txt-p">直推出现三名经理  4%</div>
+                    </div>
+                </li>
+                <li class="grade-box">
+                    <div class="grade-img">
+                        <img src="__STATIC__/tonghaoran/images/icon_zongjian.png">
+                    </div>
+                    <div class="grade-txt">
+                        <div class="grade-txt-name">销售总监</div>
+                        <div class="grade-txt-p"> 直推出现三名部长 6%</div>
+                    </div>
+                </li>
+                <li class="grade-box">
+                    <div class="grade-img">
+                        <img src="__STATIC__/tonghaoran/images/icon_zongcai.png">
+                    </div>
+                    <div class="grade-txt">
+                        <div class="grade-txt-name">销售总裁</div>
+                        <div class="grade-txt-p">直推出现三名总监 8%</div>
+                    </div>
+                </li>
+                <li class="grade-box">
+                    <div class="grade-img">
+                        <img src="__STATIC__/tonghaoran/images/icon_gudong.png">
+                    </div>
+                    <div class="grade-txt">
+                        <div class="grade-txt-name">销售股东</div>
+                        <div class="grade-txt-p">直推出现三名总裁 10%</div>
+                    </div>
+                </li> -->
+                <div class="advance">
+                    晋级奖 ： 根据业绩的提升，职位和利益随之提升差额奖
+                </div>
+            </ul>
+
+        </div>
+    </div>
+
+</div>
+
+<include file="public/footer"/>
+
+<script>
+    $(function () {
+        /*for(let i=0;i<$(".page-level .level-icon-img").length - 1; i++){
+            let ind = $(".page-level .level-icon-img").eq(i).attr("data-index")
+            console.log(ind)
+            if(ind == "{$display}"){
+                $(".page-level .level-icon-img").hide()
+                $(".page-level .level-icon-img").eq(i).show()
+            }
+        }*/
+
+        for(let i=0;i<$(".page-level .level-icon-img").length; i++){
+                let ind = $(".page-level .level-icon-img").eq(i).attr("data-index")
+
+                $(".page-level .level-icon-img").hide()
+                if(ind == "{$display}"){
+                    // $(".page-level .level-icon-img").hide()
+                    $(".page-level .level-icon-img").eq(i).show()
+                    return;
+                }
+            }
+
+
+
+        //设置  手指拖拽进度滑块 的事件
+        // moveUp()
+        function moveUp() {
+            var  move = false;
+            //开始按下手指事件
+            $(".top-box").on("mousedown", function (e) {
+                move = true;
+                e=e||window.e;
+                e.preventDefault();
+                _x = e.pageX - parseInt($(".top-box").css("left"));
+                _y = e.pageY;
+
+                console.log(_x+"=="+_y);
+            })
+            //移动手指事件
+            $(".top-box").on("mousemove", function (e) {
+                e.preventDefault();
+                if (move) {
+                    x = e.pageX - _x;
+                    $(".top-box").css("left", x+"px");
+                }
+            })
+            //松开手指事件
+            $(".top-box").on("mouseup", function (e) {
+                e.preventDefault();
+                move = false;
+            })
+        }
+    })
+</script>
+
+
+</body>
+</html>

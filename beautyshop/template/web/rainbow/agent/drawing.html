@@ -1,0 +1,196 @@
+<!-- <!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="initial-scale=1,maximum-scale=1,minimum-scale=1" />
+
+    <meta name="apple-mobile-web-app-capable" content="yes">
+
+    <meta name="format-detection" content="telephone=no">
+    <title>提现</title>
+    <link rel="stylesheet" type="text/css" href="css/ui-dialog.css">
+    <link rel="stylesheet" href="css/common.css">
+    <link rel="stylesheet" href="css/mr_style.css">
+    <script type="text/javascript" src="__STATIC__/tonghaoran/js/jquery.min.js"></script>
+    <style>
+        select{background: #fff;}
+    </style>
+</head>
+<body class="page-with1"> -->
+
+<include file="public/header" title="提现"  body="page-with1"/>
+<style>
+    select{background: #fff;}
+</style>
+<link rel="stylesheet" type="text/css" href="__STATIC__/tonghaoran/css/common.css">
+<link rel="stylesheet" type="text/css" href="__STATIC__/tonghaoran/css/mr_style.css">
+
+<header id="header" class="">
+    <div class="icon-back" onclick="history.back()"></div>
+    <h5>提现</h5>
+</header>
+
+<div class="main">
+    <!--<div class="inp-box flex-row">
+        <div class="name">选择银行</div>
+        <span>:</span>
+        <div class="right">
+            <select id="bankname">
+                <option value="工商银行">工商银行</option>
+                <option value="建设银行">建设银行</option>
+                <option value="邮政银行">邮政银行</option>
+                <option value="招商银行">招商银行</option>
+            </select>
+        </div>
+    </div>
+    <div class="inp-box flex-row">
+        <div class="name">姓    名</div>
+        <span>:</span>
+        <div class="right">
+            <input type="text" name="" id="name" value="" placeholder="请输入您的姓名">
+        </div>
+    </div>
+    <div class="inp-box flex-row">
+        <div class="name">银行卡号</div>
+        <span>:</span>
+        <div class="right">
+            <input type="text" name="" id="bankcard" value="" placeholder="请输入您的银行卡号">
+        </div>
+    </div>
+    <div class="inp-box flex-row">
+        <div class="name">确认卡号</div>
+        <span>:</span>
+        <div class="right">
+            <input type="text" name="" id="bankcard1" value="" placeholder="请再次输入您的银行卡号">
+        </div>
+    </div>-->
+
+    <a class="yh" href="{:U('cosmetology/Agent/bindingBankNumber')}">
+        <div class="yh-lf">
+            <div class="yh-img">
+                <img src="__STATIC__/tonghaoran/images/icon_bank.png">
+            </div>
+            <div class="yh-name">
+                <div class="yh-tit">{$user_info[opening_bank]}</div>
+                <div class="yh-txt">尾号{:substr($user_info[bank_account],-4)}储蓄卡</div>
+            </div>
+        </div>
+        <div class="yh-rg"></div>
+    </a>
+
+    <div class="money">
+        <h4>提取金额</h4>
+        <div class="box flex-row">
+            <span>￥</span>
+            <div class="right">
+                <input type="text" name="" id="money" value="" placeholder="100">
+            </div>
+            <button type="button" class="all">全部提现</button>
+        </div>
+        <div class="balance">当前余额<span class="user_money">{$user_info[user_money]}</span>元</div>
+    </div>
+
+    <div class="p1">请确保账号准确无误，预计3-7个工作日到账</div>
+
+    <div class="btn-box">
+        <button type="button" class="btn-blue btn-submit1">提现</button>
+    </div>
+
+</div>
+
+<div class="bank-withdrawal">
+    <div class="bank-withdrawal-img">
+        <img src="__STATIC__/tonghaoran/images/icon_bank.png">
+    </div>
+    <p>提现申请发起成功，银行处理中！</p>
+    <div class="bank-withdrawal_btn">
+        <input type="button" name="" value="确定" />
+    </div>
+</div>
+
+<div class="mask"></div>
+
+
+<include file="public/footer"/>
+
+</body>
+<script type="text/javascript" src="__STATIC__/tonghaoran/js/dialog-plus-min.js"></script>
+<script>
+
+    $(function(){
+        var user_money = {$user_info[user_money]};
+        $('.all').on('click', function(){
+            $('#money').val(user_money)
+        })
+
+
+        $('.btn-submit').on('click', function(){
+            var name = $('#name').val();
+            var bankname = $('#bankname').val();
+            var card = $('#bankcard').val();
+            var card1 = $('#bankcard1').val();
+            var money = $('#money').val();
+            if(bankname === ''){
+                dialogFun('请选择银行')
+                return;
+            }
+            if(name === ''){
+                dialogFun('请输入您的姓名')
+                return;
+            }
+            if(card === ''){
+                dialogFun('请输入您的银行卡号')
+                return;
+            }
+            if(card1 === ''){
+                dialogFun('请再次输入您的银行卡号')
+                return;
+            }
+            if(card !== card1){
+                dialogFun('两次输入的银行卡号不一致')
+                return;
+            }
+            if(money === ''){
+                dialogFun('请输入提现金额')
+                return;
+            }
+        })
+
+
+        $(".page-with1").on("click",".btn-submit1",function(){
+            var money = $('#money').val();
+            $.post("{:U('cosmetology/Agent/drawing')}", {money:money},function(datas){
+                var values = JSON.parse(datas);
+                if(values['status'] == 1){
+                    $(".page-with1 .bank-withdrawal").show();
+                    $(".page-with1 .mask").show();
+                    $('#money').val(0)
+                    user_money = values['info'];
+                    $('.user_money').html(values['info'])
+                }else{
+                    dialogFun(values['msg'])
+                }
+            });
+        });
+        $(".bank-withdrawal_btn").on("click",function(){
+            $(".page-with1 .bank-withdrawal").hide();
+            $(" .page-with1 .mask").hide();
+        });
+
+
+    })
+
+    function dialogFun(str){
+        dialog({
+            width: 280,
+            title: '提示',
+            content: str,
+            cancel: false,
+            okValue: '确定',
+            ok: function(){
+            }
+        }).showModal();
+    }
+</script>
+</html>

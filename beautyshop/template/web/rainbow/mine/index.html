@@ -1,0 +1,87 @@
+<include file="public/header" title="我的"  body="page-mine page-miney"/>
+<link rel="stylesheet" type="text/css" href="__STATIC__/tonghaoran/css/common.css">
+<link rel="stylesheet" type="text/css" href="__STATIC__/tonghaoran/css/mr_style.css">
+<header id="header" class="">
+    <div class="icon-back" onclick="history.back()"></div>
+    <h5>我的</h5>
+</header>
+    <div class="container">
+        <div class="top">
+            <div class="yuan">
+                <div class="avatar"><img src="<if condition='$user_info[head_pic] neq null'>{$user_info[head_pic]}<else />__STATIC__/tonghaoran/images/prod6.png</if>" alt=""></div>
+            </div>
+            <div class="nicename">
+            	<p><if condition="$user_info['nickname'] neq ''">{$user_info['nickname']}<else />{$user_info['mobile']}</if></p>
+            	<div class="VIP"><if condition="$level neq ''">{$level['level_name']}<else />普通会员</if></div>
+            </div>
+        	<a href="{:U('cosmetology/Mine/setUp')}" class="right flex-row" title="">
+                <p>设置</p>
+                <div class="jt-r"></div>
+            </a>
+        </div>
+
+        <div class="main">
+            <div class="order">
+                <div class="tit flex-row">
+                    <div class="name">我的订单</div>
+                    <a href="{:U('cosmetology/Order/orderList')}" class="right" title="">
+                        <p>查看全部订单</p>
+                        <div class="jt-r"></div>
+                    </a>
+                </div>
+                <ul class="flex-row">
+                    <li>
+                        <a href="{:U('cosmetology/Order/orderList',['status'=>'WAITPAY'])}" title="" class="flex-column">
+                            <div class="icon i1"></div>
+                            <div class="name">待付款<span <if condition="$order_num['WAITPAY'] neq 0">class="take_y"</if> >{$order_num['WAITPAY']}</span></div>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{:U('cosmetology/Order/orderList',['status'=>'WAITSEND'])}" title="" class="flex-column">
+                            <div class="icon i2"></div>
+                            <div class="name">待发货<span <if condition="$order_num['WAITSEND'] neq 0">class="take_y"</if> >{$order_num['WAITSEND']}</span></div>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{:U('cosmetology/Order/orderList',['status'=>'WAITRECEIVE'])}" title="" class="flex-column">
+                            <div class="icon i3"></div>
+                            <div class="name">待收货<span <if condition="$order_num['WAITRECEIVE'] neq 0">class="take_y"</if> >{$order_num['WAITRECEIVE']}</span></div>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{:U('cosmetology/Order/orderList',['status'=>'FINISH'])}" title="" class="flex-column">
+                            <div class="icon i4"></div>
+                            <div class="name">已完成<span <if condition="$order_num['FINISH'] neq 0">class="take_y"</if> >{$order_num['FINISH']}</span></div>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="other">
+            	<ul>
+	                <li>
+	                    <a href="{:U('cosmetology/Mine/collection')}" class="flex-row" title="">
+	                        <div class="icon i1"></div>
+	                        <div class="right flex-row">
+	                            <div class="name">我的收藏</div>
+	                            <div class="jt-r"></div>
+	                        </div>
+	                    </a>
+	                </li>
+	                <li>
+	                    <a href="{:U('cosmetology/Mine/address')}" class="flex-row" title="">
+	                        <div class="icon i2"></div>
+	                        <div class="right flex-row">
+	                            <div class="name">地址管理</div>
+	                            <div class="jt-r"></div>
+	                        </div>
+	                    </a>
+	                </li>
+	            </ul>
+	        </div>
+        </div>
+    </div>
+
+<include file="public/footer"/>
+</body>
+</html>

@@ -1,0 +1,40 @@
+<div class="wuliu">
+    <div class="wuliu-stats">
+        <div class="wuliu-top">
+            <div class="box-top">
+                <div class="lf">
+                    <div class="shop-img">
+                        <img src="{:goods_thum_images($order[order_goods][0]['goods_id'],60,60)}">
+                    </div>
+                    <div class="shop-txt">共{$order[total_num]}件商品</div>
+                </div>
+                <div class="rg">
+                    <p>{:trim($order[goods_name],'、')}</p>
+                    <div class="yuantong">{$order[shipping_name]}：{$order[invoice_no]}</div>
+                </div>
+            </div>
+        </div>
+
+        <ul class="wuliu-con">
+            <volist name="logistics_info" id="log">
+                <li class="wuliu-box">
+                    <div class="time">
+                        <div class="day">{$log[time]|date='m-d',###}</div>
+                        <div class="hour">{$log[time]|date='H:i',###}</div>
+                    </div>
+                    <div class="stats"></div>
+                    <div class="wuliu-info">
+                        <div class="wuliu-info-tit"></div>
+                        <div class="yun-info">
+                            <div class="yun-info1-yuan"></div>
+                            {$log[context]}
+                        </div>
+                    </div>
+                </li>
+            </volist>
+        </ul>
+    </div>
+    <div class="bot-del">
+        <img src="__STATIC__/tonghaoran/images/icon_close.png">
+    </div>
+</div>

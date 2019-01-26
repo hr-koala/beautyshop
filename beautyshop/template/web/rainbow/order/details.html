@@ -1,0 +1,195 @@
+<include file="public/header" title="订单详情" body="page-miorder page-order-detail"/>
+<link rel="stylesheet" type="text/css" href="__STATIC__/tonghaoran/css/common.css">
+<link rel="stylesheet" type="text/css" href="__STATIC__/tonghaoran/css/mr_style.css">
+
+<header id="header" class="">
+    <div class="icon-back" onclick="history.back()"></div>
+    <h5>订单详情</h5>
+</header>
+
+<div class="container">
+    <div class="top">
+        <div class="top-stats">{$order[order_status_detail]}</div>
+        <div class="top-img">
+            <img src="__STATIC__/tonghaoran/images/order-detail.png">
+        </div>
+    </div>
+
+    <div class="no-data">
+        <img src="__STATIC__/tonghaoran/images/icon-null-order.png">
+    </div>
+    <div class="list has-data">
+
+        <a href="mine_address.html" class="address">
+            <div class="lf">
+                <div class="address-dingwei">
+                    <img src="__STATIC__/tonghaoran/images/icon_dingwei.png">
+                </div>
+                <div class="address-con">
+                    <div class="tit">
+                        <div class="name">收货人：{$order[consignee]}</div>
+                        <div class="tel">{$order[mobile]}</div>
+                    </div>
+                    <div class="address-txt">收货地址：{:str_replace("，","",$order[full_address])}</div>
+                </div>
+            </div>
+            <!-- <div class="rg"></div> -->
+        </a>
+        <div class="box">
+            <ul>
+                <volist name="order['order_goods']" id="goods">
+                    <li class="goods">
+                        <div class="item flex-row">
+                            <a href="#">
+                                <div class="img"><img src="{:goods_thum_images($goods[goods_id],60,60)}" alt=""></div>
+                                <div class="right flex-column">
+                                    <div class="name">{$goods[goods_name]}</div>
+                                    <div class="bot">
+                                        <div class="spec">{$goods[spec_key_name]}</div>
+                                        <div class="flex-row">
+                                            <div class="price">￥{$goods[member_goods_price]}</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="num">x{$goods[goods_num]}</div>
+                            </a>
+                        </div>
+                    </li>
+                </volist>
+
+            </ul>
+        </div>
+        <div class="all">
+            <div class="total-price">
+                <span>商品总额：</span>
+                <span>¥{$order[goods_price]}</span>
+            </div>
+            <div class="total-price">
+                <span>运费：</span>
+                <span>¥{$order[shipping_price]}</span>
+            </div>
+            <div class="total-price">
+                <span>实付费（含运费）</span>
+                <span>¥{$order[total_amount]}</span>
+            </div>
+        </div>
+        <div class="biaohao">
+            <div class="biaohao-txt">
+                订单编号：{$order[order_sn]}
+            </div>
+            <div class="biaohao-txt">
+                创建时间：{$order[add_time]|date='Y-m-d H:i:s',###}
+            </div>
+        </div>
+        <div class="btn-row">
+            <if condition="$order[order_status_detail] eq '待支付'">
+                <button type="button" class="btn btn-cancel">取消订单</button>
+                <button type="button" class="btn bg-blue" onclick="window.location.href='{:U('cosmetology/Order/placeOrder',['order_id'=>$order['order_id']])}'">立即支付</button>
+            <elseif condition="$order[order_status_detail] eq '待收货'" />
+                <button type="button" class="btn confirm_receipt">确认收货</button>
+                <button type="button" class="btn btn-logist">查看物流</button>
+            <elseif condition="$order[order_status_detail] eq '已完成'" />
+                <button type="button" class="btn btn-logist">查看物流</button>
+            </if>
+        </div>
+    </div>
+
+</div>
+
+<div class="wuliu"></div>
+<div class="mask"></div>
+
+<script type="text/javascript" src="__STATIC__/js/dialog-plus-min.js"></script>
+<include file="public/footer"/>
+
+</body>
+<script>
+
+    $(function(){
+        var order_id = {$order['order_id']};
+        $('.head ul li').on('click', function(){
+            var index = $(this).data('index')
+            $(this).addClass("on").siblings().removeClass('on')
+        })
+
+        $('.page-miorder .box .btn-cancel').on('click', function(){
+            $(this).parent().parent(".box").remove()
+            boxlen()
+        })
+        boxlen()
+        function boxlen() {
+            console.log($(".page-miorder .box").length)
+            if($(".page-miorder .box").length == 0){
+                $(".page-miorder .has-data").hide()
+                $(".page-miorder .no-data").show()
+            }else {
+                $(".page-miorder .has-data").show()
+                $(".page-miorder .no-data").hide()
+            }
+        }
+
+        $(".btn-row .btn-logist").on("click",function () {
+            $.post("{:U('cosmetology/Order/viewLogistics')}", {order_id:order_id},function(datas){
+                var values = JSON.parse(datas);
+                if(values.status == 1){
+                    $(".page-miorder .wuliu").html(values.info)
+                    $(".page-miorder .mask").show()
+                    $(".page-miorder .wuliu").show()
+                }
+            });
+            
+        })
+
+        $(".wuliu ").on('click', '.bot-del img',function () {
+            $(".mask").hide()
+            $(".wuliu").hide()
+        })
+
+        $('.btn-row .confirm_receipt').on('click', function(){
+            $.post("{:U('cosmetology/Order/confirm_receipt')}", {order_id:order_id},function(datas){
+                var values = JSON.parse(datas);
+                if(values.status == 1){
+                    dialogFun_two('已收货')
+                    window.location.reload()
+                }else{
+                    dialogFun_two('收货失败')
+                }
+            });
+        })
+
+        $('.btn-row .btn-cancel').on('click', function(){
+            dialogFun('确定取消订单？',$(this));
+        })
+
+        function dialogFun(str,inx){
+            dialog({
+                width: 280,
+                title: '提示',
+                content: str,
+                cancel: false,
+                okValue: '确定',
+                ok: function(){
+                    $.post("{:U('cosmetology/Order/cancelOrder')}", {order_id:order_id},function(datas){
+                        var values = JSON.parse(datas);
+                        if(values.status == 1){
+                            /*$(inx).parent().parent(".box").remove()
+                            boxlen()
+                            dialogFun_two('取消成功')*/
+                            dialogFun_two('取消成功')
+                            window.location.href="/cosmetology/Order/orderList.html"
+                        }else{
+                            dialogFun_two('取消失败')
+                        }
+                    });
+                }
+            }).showModal();
+        }
+
+        function dialogFun_two(str){
+            webToast(str,"middle",3000);
+        }
+
+    })
+
+</script>
+</html>

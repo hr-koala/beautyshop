@@ -1,0 +1,106 @@
+<include file="public/header" title="搜索"  body="page-search"/>
+<link rel="stylesheet" type="text/css" href="__STATIC__/xiong/css/grabble.css">
+<style type="text/css">
+.selects .classification .cation_on{
+    background: #ed8dbe;
+    color: white;
+}
+.class-list ul .sort .on{
+    background: #f1f1f1;
+}
+.class-list ul .sort .off{
+    background: #fff;
+}
+</style>
+<header id="header" class="">
+    <div class="icon-back" onclick="history.back()"></div>
+    <h5>全部商品</h5>
+</header>
+<div>
+    <form action="" id="grabble">
+        <input type="search" name="name" value="{:I('name') == ''?'':I('name')}" class="goodsname" placeholder="搜索">
+    </form>
+    <div class="types">
+        <span class="complex">综合</span>
+        <span class="volume">销量</span>
+        <span class="price">价格</span>
+        <span class="filter">筛选</span>
+    </div>
+    <div class="mask">
+        <div class="selects">
+            <div class="classification">
+                <volist name="attribute" id="attr">
+                    <span class="cation_off" id="{$attr['value']}">{$attr['name']}</span>
+                    <!-- <input type="hidden" class="cation_value" value="{$attr['value']}"> -->
+                </volist>
+            </div>
+            <div class="select-class">
+                <div class="titles">选择分类</div>
+                <div class="class-list">
+                    <volist name="tabulation['topCategory']" id="top" key="k">
+                        <ul class="{$k == 1?'class-on':'';}">{$top['name']}
+                            <div class="sort" style="display:{$k == 1?block:none;}">
+                                <volist name="tabulation['twoCategory']" id="two">
+                                    <if condition="$two['parent_id'] eq $top['id']">
+                                        <li id="path{$two['parent_id_path']}">{$two['name']}</li>
+                                    </if>
+                                </volist>
+                            </div>
+                        </ul>
+                    </volist>
+                </div>
+            </div>
+            <div class="btn">
+                <button class="cancel">取消筛选</button>
+                <input type="submit" value="确认" class="confirm"/>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="conter">
+    <volist name="goods" id="list">
+        <a class="goods-item" href="{:U('cosmetology/Goods/details',['id'=>$list['goods_id']])}">
+            <div class="img"><img src="{$list['original_img']}" alt=""></div>
+            <div class="name">{$list['goods_name']}</div>
+            <if condition="$level neq null">
+                <div class="gbot flex-row">
+                    <div class="gleft">
+                        <div class="has-price">¥{$list['shop_price']}</div>
+                        <div class="price">代理价：<span>¥{$list['shop_price']/2}</span></div>
+                    </div>
+                    <div class="icon icon-cart"></div>
+                </div>
+            <else />
+                <div class="gbot flex-row">
+                    <div class="price"><span>¥{$list['shop_price']}</span></div>
+                    <div class="icon icon-cart"></div>
+                </div>
+            </if>
+        </a>
+    </volist>
+
+    <if condition="$goods eq null">
+        <!-- msg为空是显示 -->
+        <div class="air">
+            <img src="__STATIC__/xiong/img/wu.jpg">
+            <p>暂时没有任何商品</p>
+        </div>
+    </if>
+    <!-- 清除浮动 -->
+    <div style="clear:both;"></div>
+</div>
+<script type="text/javascript" src="__STATIC__/js/vue.js"></script>
+<include file="public/footer"/>
+<script type="text/javascript" src="__STATIC__/xiong/js/grabble.js"></script>
+</body>
+<script>
+    new Vue({
+        el:'.conter',
+        data:{
+            msg:'1'
+        }
+    })
+</script>
+</html>

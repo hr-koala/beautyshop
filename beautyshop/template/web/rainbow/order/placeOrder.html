@@ -1,0 +1,40 @@
+<include file="public/header" title="确认订单" body="page-caqror"/>
+<link rel="stylesheet" type="text/css" href="__STATIC__/tonghaoran/css/common.css">
+<link rel="stylesheet" type="text/css" href="__STATIC__/tonghaoran/css/mr_style.css">
+
+<header id="header" class="">
+    <div class="icon-back" onclick="history.back()"></div>
+</header>
+
+<div class="container">
+    <div class='main'>
+        <div class='box flex-row'>
+            <div class='name'>订单编号</div>
+            <div class='num'>{$order}</div>
+        </div>
+        <div class='box flex-row'>
+            <div class='name'>订单金额</div>
+            <div class='num cg1'>￥{$info['total_amount']}</div>
+        </div>
+        <div class='btn-box'>
+            <button type="button" class="btn" onclick="window.location.href='/cosmetology/Pay/wxh5pay.html?order={$order}'">微信支付</button>
+        </div>
+        <div class='btn-box'>
+            <button type="button" class="btn zhifubao" onclick="window.location.href='/cosmetology/Pay/alipay_pay.html?order={$order}'">支付宝支付</button>
+        </div>
+    </div>
+</div>
+</body>
+<script type="text/javascript" src="__STATIC__/js/dialog-plus-min.js"></script>
+<script>
+$(function(){
+    /*$('.zhifubao').click(function(){
+        dialogFun_two('暂未开通支付宝支付')
+    })*/
+
+    function dialogFun_two(str){
+        webToast(str,"middle",3000);
+    }
+})
+</script>
+</html>

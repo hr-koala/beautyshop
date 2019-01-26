@@ -1,0 +1,140 @@
+<include file="public/header" title="我的团队"  body="page-team"/>
+<link rel="stylesheet" type="text/css" href="__STATIC__/tonghaoran/css/common.css">
+<link rel="stylesheet" type="text/css" href="__STATIC__/tonghaoran/css/mr_style.css">
+<link rel="stylesheet" href="__STATIC__/tonghaoran/css/dropload.css">
+<script src="__STATIC__/tonghaoran/js/dropload.min.js"></script>
+
+
+<header id="header" class="">
+    <div class="icon-back" onclick="history.back()"></div>
+    <h5>我的团队</h5>
+</header>
+
+<div class="container">
+    <div class="top">
+        <div class="num"><span>{$count_team}</span></div>
+        <div class="name">我的团队（人）</div>
+    </div>
+    <div class="invite-con">
+        <div class="con-top">
+            <div class="time">注册时间</div>
+            <div class="time">手机号</div>
+            <div class="time">当前等级</div>
+        </div>
+        <ul class="con-p">
+            <!-- <li class="con-txt">
+                <div class="time">2018-12-22</div>
+                <div class="time">132****3157</div>
+                <div class="time">一级销售经理</div>
+            </li> -->
+        <if condition="$team neq null">
+            <volist name="team" id="record">
+                <div class="con-txt">
+                    <div class="time">{$record[reg_time]|date='Y-m-d',###}</div>
+                    <div class="time">{:substr_replace($record[mobile], '****', 3, 4)}</div>
+                    <div class="time levels"><volist name="all_level" id="level"><if condition="$level[level_id] eq $record[level]">{$level[level_name]}</if></volist></div>
+                </div>
+            </volist>
+        </if>
+        </ul>
+    </div>
+    <div class="invite-no">
+        <img src="__STATIC__/tonghaoran/images/icon_no-daili.png">
+        <div class="no-num">
+            暂无，去努力邀请好友吧~
+        </div>
+    </div>
+</div>
+
+<include file="public/footer"/>
+<!-- <footer id="footer-nav"></footer>
+<script type="text/javascript">var footerNav =  4;</script>
+<script type="text/javascript" src="js/footer.js"></script> -->
+
+<script>
+    $(function () {
+        console.log($(".top .num span").text())
+        if($(".top .num span").text() == 0){
+            $(".invite-con").hide()
+            $(".invite-no").show()
+        }else {
+            $(".invite-con").show()
+            $(".invite-no").hide()
+        }
+    })
+
+    $(".levels").each(function () {
+        if($(this).html() === 'undefined' || $(this).html() === null || $(this).html() === ''){
+            $(this).html('普通会员')
+        }
+    })
+
+    function loadMore() {
+        var jsContent = "";
+        var loadMoreContent = "<div id='load_more_content' class='red_load_more_content'>-- 加载更多 --</div>";
+        $("#load_more_content").remove();
+        for (var i = 0; i < 10; i++) {
+            jsContent += '<li class="con-txt"> <div class="time">2018-12-22</div> <div class="time">132****3157</div> <div class="time">销售经理</div> </li>';
+        }
+        jsContent+=loadMoreContent;
+        $(".con-p").append(jsContent);
+    }
+
+        // loadMore();
+    //  监听指定组件滑动
+    $(".con-p").scroll(function(){
+        console.log("$(\"this\").scrollHeight" + $(this)[0].scrollHeight);
+        console.log("$(this).height()" + $(this).height());
+        console.log("$(this)[0].scrollTop" + $(this)[0].scrollTop);
+        if($(this)[0].scrollTop+$(this).height()>=$(this)[0].scrollHeight){
+            setTimeout(function(){
+                // loadMore();
+            },1000)
+        }
+    });
+ /*   $(function(){
+        var page = 1;                           // 页数
+        var size = 2;                         // 每页展示10个
+        $('.content').dropload({
+            scrollArea : window,
+            domDown : {
+                domClass   : 'dropload-down',
+                domRefresh : '<p class="dropload-refresh">↑加载更多</p>',
+                domLoad    : '<p class="dropload-load"><span class="loading"></span>加载中...</p>',
+                domNoData  : '<p class="dropload-noData">暂无数据</p>'
+            },
+            loadDownFn : function(me){
+                page++;            // 拼接HTML
+                var result = '';
+                $.ajax({
+                    type: 'GET',
+                    url: '/cosmetology/dropload/json.php?page='+page+'&size='+size,
+                    dataType: 'json',
+                    success: function(data){
+                        var arrLen = data.length;
+                        if(arrLen > 0){
+                            for(var i=0; i<arrLen; i++){
+                            result += '<li class="con-txt"> <div class="time">2018-12-22</div> <div class="time">132****3157</div> <div class="time">销售经理</div> </li>';
+                            }
+                        }else{                        // 如果没有数据
+                            me.lock();                // 锁定
+                            me.noData();              // 无数据
+                        }
+                        setTimeout(function(){
+                            $('.lists').append(result);            // 插入数据到页面，放到最后面
+                            me.resetload();                        // 每次数据插入，必须重置
+                        },1000);
+                    },
+                    error: function(xhr, type){
+                        alert('Ajax error!');                    // 即使加载出错，也得重置
+                        me.resetload();
+                    }
+                });
+            },
+            threshold : 50
+        });
+    });*/
+</script>
+
+</body>
+</html>

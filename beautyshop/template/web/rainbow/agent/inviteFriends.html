@@ -1,0 +1,119 @@
+<include file="public/header" title="邀请好友"  body="page-invite-friend"/>
+<link rel="stylesheet" type="text/css" href="__STATIC__/tonghaoran/css/common.css">
+<link rel="stylesheet" type="text/css" href="__STATIC__/tonghaoran/css/mr_style.css">
+
+<header id="header" class="">
+    <div class="icon-back" onclick="history.back()"></div>
+    <h5>邀请好友</h5>
+</header>
+
+<div class="container">
+    <div class="main">
+        <!--<img src="__STATIC__/tonghaoran/images/icon_yaoqing_bg.png">-->
+        <div class="invite-qrcode">
+            <div class="mine-code">
+                我的邀请码
+            </div><!--  style="visibility: hidden;" -->
+            <input type="" id="mcode" value="{$user_info[invitation_code_own]}" name="" style="opacity: 0">
+            <div id="invite-code-num" class="invite-code-num">{$user_info[invitation_code_own]}</div>
+            <div class="code-fuzhi">
+                复制
+            </div>
+            <div class="fuzhi-succ">复制成功</div>
+        </div>
+        <div class="record">
+            <if condition="$invitation_record neq null">
+                <div class="record-tit">
+                    -----------------  邀请记录  ----------------
+                </div>
+                <ul class="record-con">
+                    <li class="record-row record-row-tit">
+                        <div class="record-col">邀请日期</div>
+                        <div class="record-col">手机号</div>
+                        <div class="record-col">当前等级</div>
+                    </li>
+                    <volist name="invitation_record" id="record">
+                        <li class="record-row">
+                            <div class="record-col">{$record[reg_time]|date='Y-m-d',###}</div>
+                            <div class="record-col">{:substr_replace($record[mobile], '****', 3, 4)}</div>
+                            <div class="record-col levels"><volist name="all_level" id="level"><if condition="$level[level_id] eq $record[level]">{$level[level_name]}</if></volist></div>
+                        </li>
+                    </volist>
+                </ul>
+            </if>
+            <div class="record-shuoming">
+                <div class="layer-con">
+                    <div class="layer-top">
+                        <img src="__STATIC__/tonghaoran/images/icon_point.png">
+                        <div class="shuoming">
+                            奖励说明
+                        </div>
+                        <img src="__STATIC__/tonghaoran/images/icon_point.png">
+                    </div>
+                    <div class="layer-box">
+                        <ul class="layer-p">
+                            <volist name="notes_list['bonus_notes']" id="note">
+                                <div class="layer-p1">{$note}</div>
+                            </volist>
+                        </ul>
+                        <div class="layer-tab">
+                            <dl border="1" cellpadding="0" cellspacing = "0">
+                                <dt>
+                                    <ol>
+                                        <li>销售业绩</li>
+                                        <li>提成比例</li>
+                                        <li>销售业绩</li>
+                                        <li>提成比例</li>
+                                    </ol>
+                                </dt>
+                                <dt>
+                                    <volist name="notes_list[sales_award]" id='sales'>
+                                        <ul>
+                                            <li>{$sales[achievement]/10000}万</li>
+                                            <li>{$sales[royalty_ratio]}%</li>
+                                        </ul>
+                                    </volist>
+                                </dt>
+                            </dl>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        <a href="{:U('cosmetology/Agent/generatingCard')}" class="invite-card">
+            生成邀请卡
+        </a>
+        </div>
+    </div>
+</div>
+
+
+<include file="public/footer"/>
+
+<script>
+    $(function () {
+        $(".page-invite-friend").on("click",".code-fuzhi",function () {
+            copyText()
+            $(".page-invite-friend .fuzhi-succ").show()
+            setTimeout('$(".page-invite-friend .fuzhi-succ").hide()',1000)
+        })
+        function copyText() {
+            var codeNum = $(".page-invite-friend .invite-code-num").text();
+            var url2 = document.getElementById("invite-code-num");
+            console.log(url2)
+            // alert(1111)
+            // $(url2).select(); // 选中文本
+            $('#mcode').select()
+            document.execCommand("Copy"); // 执行浏览器复制命令
+        }
+
+        $(".levels").each(function () {
+            if($(this).html() === 'undefined' || $(this).html() === null || $(this).html() === ''){
+                $(this).html('普通会员')
+            }
+        })
+    })
+</script>
+
+</body>
+</html>

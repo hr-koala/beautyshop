@@ -1,0 +1,156 @@
+<include file="public/header" title="报单"  body="page-cart page-report-cart page-report"/>
+<script type="text/javascript" src="__STATIC__/tonghaoran/js/jquery.min.js"></script>
+<link rel="stylesheet" type="text/css" href="__STATIC__/tonghaoran/css/common.css">
+<link rel="stylesheet" type="text/css" href="__STATIC__/tonghaoran/css/mr_style.css">
+
+<header id="header" class="">
+    <div class="icon-back" onclick="history.back()"></div>
+    <h5>报单</h5>
+</header>
+
+<div class="container" id="all">
+    <div class="taocan">套餐选择</div>
+    <div class="main" v-if="2<3">
+        <div class="list">
+            <volist name="goods_list" id="list">
+                <div class="box flex-row" data-num="1" data-price="{$list['shop_price']}" href="{:U('cosmetology/Goods/details',['id'=>$list['goods_id']])}">
+                    <label><input type="checkbox" name="" value="{$list['goods_id']}" class="choose"></label>
+                    <div class="img"><img src="{$list['original_img']}" alt=""></div>
+                    <div class="right flex-column">
+                        <div class="name">{$list['goods_name']}</div>
+                        <!-- <div class="spec">规格:100ML规格:100ML规格:100ML规格:100ML规格:100ML规格:100ML规格:100ML</div> -->
+                        <div class="sbot flex-row">
+                            <div class="price">¥{$list['shop_price']}</div>
+                            <div class="set-num flex-row">
+                                <div class="num">1</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </volist>
+
+        </div>
+        <div class="report-curren">
+            <div class="all-price price">合计金额：
+                <input type="hidden" class="money" value="0">
+                <span class="all-price-num" id="allPrice">¥0</span>
+                <span class="all-price-txt">（当前商品使用报单币付款）</span>
+            </div>
+        </div>
+
+        <div class="btn btn-buy">
+            <span class="purchase" style="color: white; font-size: 16px;">购买</span>
+        </div>
+    </div>
+</div>
+<include file="public/footer"/>
+</body>
+<script type="text/javascript" src="__STATIC__/tonghaoran/js/vue.js"></script>
+<script type="text/javascript" src="__STATIC__/js/dialog-plus-min.js"></script>
+<script>
+
+    $(function(){
+
+
+        var vm = new Vue({
+            el: '#all'
+        })
+
+        //全选
+        $('.choose-all').on('change', function(){
+            if(this.checked){
+                $.each($('.main .box .choose'), function(is, el){
+                    this.checked = true
+                });
+                $('.main .box label').addClass('on')
+            }else{
+                $.each($('.main .box .choose'), function(is, el){
+                    this.checked = false
+                });
+                $('.main .box label').removeClass('on')
+            }
+            countPrice()
+        })
+
+        //选择
+        $('.main').on('change', '.box .choose', function(){
+            if(this.checked){
+                $(this).parent().addClass('on')
+            }else{
+                $(this).parent().removeClass('on')
+            }
+            countPrice()
+        })
+
+        //减数量
+        $('.main').on('click', '.box .sub', function(e){
+            var $box = $(this).closest('.box');
+            var num = parseInt($box.data('num'))
+            if(num > 1){
+                num -= 1;
+                $box.data('num', num)
+                $box.find('.num').html(num)
+                countPrice()
+            }
+        })
+        //加
+        $('.main').on('click', '.box .add', function(e){
+            var $box = $(this).closest('.box');
+            var num = parseInt($box.data('num'))
+            num += 1;
+            $box.data('num', num)
+            $box.find('.num').html(num)
+            countPrice()
+        })
+
+        //计算价格 显示
+        function countPrice(){
+            var box = $('.main .box');
+            var price = 0; //总价格
+            var len = 0; //选中的个数
+            $.each(box, function(is, el){
+                if($(el).find('.choose')[0].checked){
+                    var num = parseInt($(el).data('num'))
+                    var pr = parseFloat($(el).data('price'))
+                    len++;
+                    price += num * pr;
+                }
+            })
+            price = parseFloat(price.toFixed(2))
+            if(price > 0){
+                $('.floor .jies').addClass('on')
+            }else{
+                $('.floor .jies').removeClass('on')
+            }
+            $('#allPrice').html('￥' + price)
+            $('.money').val(price)
+            
+        }
+
+
+        $(".purchase").click(function(){
+            var goods_id = '';
+            $.each($('input:checkbox:checked'),function(){
+                goods_id = $(this).val();
+            });
+            if(goods_id == ''){
+                dialogFun_two('请选择购买的商品');
+                return false;
+            }
+            var price = $('.money').val();
+            if(price > {$user_info['bank_note']}){
+                dialogFun_two('报单币余额不足');
+                return false;
+            }
+            var uid = {$user_id};
+            window.location.href = '/cosmetology/Cart/firmOrder.html?goods_id='+goods_id+'&goods_num=1&action=buy_now&type=taxation_form&uid='+uid;
+        });
+
+        function dialogFun_two(str){
+            webToast(str,"middle",1000);
+        }
+
+    })
+
+</script>
+</html>

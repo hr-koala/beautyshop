@@ -1,0 +1,32 @@
+<div class="conter" style="top: 0rem;">
+    <volist name="goods" id="list">
+        <a class="goods-item" href="{:U('cosmetology/Goods/details',['id'=>$list['goods_id']])}">
+            <div class="img"><img src="{$list['original_img']}" alt=""></div>
+            <div class="name">{$list['goods_name']}</div>
+            <if condition="$level neq null">
+                <div class="gbot flex-row">
+                    <div class="gleft">
+                        <div class="has-price">¥{$list['shop_price']}</div>
+                        <div class="price">代理价：<span>¥{$list['shop_price']/2}</span></div>
+                    </div>
+                    <div class="icon icon-cart"></div>
+                </div>
+            <else />
+                <div class="gbot flex-row">
+                    <div class="price"><span>¥{$list['shop_price']}</span></div>
+                    <div class="icon icon-cart"></div>
+                </div>
+            </if>
+        </a>
+    </volist>
+
+    <if condition="$goods eq null">
+        <!-- msg为空是显示 -->
+        <div class="air">
+            <img src="http://{$_SERVER['SERVER_NAME']}__STATIC__/xiong/img/wu.jpg">
+            <p>暂时没有任何商品</p>
+        </div>
+    </if>
+    <!-- 清除浮动 -->
+    <div style="clear:both;"></div>
+</div>

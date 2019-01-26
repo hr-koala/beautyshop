@@ -1,0 +1,89 @@
+<include file="public/header" title="分类"  body="page-classify"/>
+<header id="header" class="">
+    <div class="icon-back" onclick="history.back()"></div>
+    <h5>分类</h5>
+</header>
+
+<div class="container" id="all">
+    <div class="search">
+        <form id="frm1" action="{:U('cosmetology/Goods/search')}">
+            <div class="search-box">
+                <div class="icon"></div>
+                <div class="right">
+                    <input type="search" name="name" value="" placeholder="请输入要搜索的关键词">
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <div class="main flex-row">
+        <div class="nav">
+            <ul>
+                <!-- <li v-for="n in 12" :class="n === 1 ? 'on':''"><p>V脸霜</p></li> -->
+                <volist name="cat_list" id="list">
+                	<li class="{$pitch_on == $list['parent_id_path']?'on':''}" id="{$list['parent_id_path']}"><p>{$list['name']}</p></li>
+                </volist>
+            </ul>
+        </div>
+        <div class="goods">
+            <div class="list" id="goodslist">
+            	<volist name="goods" id="ware">
+	                <a href="{:U('cosmetology/Goods/details',['id'=>$ware['goods_id']])}" class="box flex-row">
+	                    <div class="img"><img src="{$ware['original_img']}" alt=""></div>
+	                    <div class="right flex-column">
+	                        <div class="name">{$ware['goods_name']}</div>
+                            <if condition="$level neq null">
+                                <div class="bot flex-row">
+                                    <div class="gleft">
+                                        <div class="has-price">¥{$ware['shop_price']}</div>
+                                        <div class="price">代理价：<span>¥{$ware['shop_price']/2}</span></div>
+                                    </div>
+                                    <div class="icon-cart"></div>
+                                </div>
+                            <else />
+                                <div class="bot flex-row">
+                                    <div class="price"><span>¥{$ware['shop_price']}</span></div>
+                                    <div class="icon-cart"></div>
+                                </div>
+                            </if>
+	                    </div>
+	                </a>
+                </volist>
+            </div>
+            <div class="nomore flex-row">
+                <div class="xian"></div>
+                <p>到底了~</p>
+                <div class="xian"></div>
+            </div>
+        </div>
+    </div>
+
+    
+    
+</div>
+<include file="public/footer"/>
+</body>
+
+<script type="text/javascript" src="__STATIC__/js/vue.js"></script>
+<script>
+
+$(function(){
+    var vm = new Vue({
+        el: '#all'
+    })
+
+    /*切换分类*/
+    $('.nav').on('click', 'ul li', function(){
+        $(this).addClass('on').siblings().removeClass('on')
+        var parent_id = $(this).attr('id');
+        $.post("{:U('cosmetology/Goods/ajaxGoods')}", {parent_id:parent_id},function(datas){
+            var values = JSON.parse(datas);
+            if(values['status'] == 1){
+                $('#goodslist').replaceWith(values['info']);
+            }
+        });
+    })
+})
+
+</script>
+</html>

@@ -1,0 +1,98 @@
+<include file="public/header" title="邀请好友"  body="page-invite-qrcode"/>
+<link rel="stylesheet" type="text/css" href="__STATIC__/tonghaoran/css/common.css">
+<link rel="stylesheet" type="text/css" href="__STATIC__/tonghaoran/css/mr_style.css">
+
+<header id="header" class="">
+    <div class="icon-back" onclick="history.back()"></div>
+    <h5>邀请好友</h5>
+</header>
+
+<div class="container">
+    <div class="main" id="mbsc">
+        <div class="invite-qrcode">
+            <div class="mine-code-avatar">
+                <img src="<if condition='$user_info[head_pic] neq null'>{$user_info[head_pic]}<else />__STATIC__/tonghaoran/images/prod6.png</if>" />
+            </div>
+            <div class="invite-code-name">
+                <div class="invite-qrcode-name"><if condition="$user_info['nickname'] neq ''">{$user_info['nickname']}<else />{$user_info['mobile']}</if>邀请你</div>
+                <div class="invite-qrcode-name">注册众美平身</div>
+            </div>
+            <div class="code-qrcode">
+                <img src="{$referral_code}">
+            </div>
+            <div class="invite-card-txt">
+                新用户扫码注册时 会自
+                动填入您的邀请码
+            </div>
+        </div>
+        <div class="tishi">长按识别二维码</div>
+    </div>
+</div>
+
+<div class="invite-bottom">
+    <div class="invite-bot-top">
+        <div class="invite-back"></div>
+        <div class="invite-back-txt">邀请卡已准备好，发给你的好友吧！</div>
+    </div>
+    <div class="invite-bot-con">
+        <div class="invite-weixin">
+            <img src="__STATIC__/tonghaoran/images/icon_weixin.png">
+            <div class="invite-weixin-txt">微信好友</div>
+        </div>
+        <div class="invite-weixin">
+            <img src="__STATIC__/tonghaoran/images/icon_quan.png">
+            <div class="invite-weixin-txt">朋友圈</div>
+        </div>
+        <a class="invite-weixin invite-bendi">
+            <img src="__STATIC__/tonghaoran/images/icon_bendi.png">
+            <div class="invite-weixin-txt">保存本地</div>
+        </a>
+    </div>
+</div>
+
+
+<script src="__STATIC__/tonghaoran/js/html2canvas.js"></script>
+
+<script type="text/javascript">
+    $(function () {
+        function download(){
+            event.preventDefault();
+            var w = $("#mbsc").width();
+            var h = $("#mbsc").innerHeight();
+            html2canvas($("#mbsc"), {
+                width: w,
+                height: h,
+                allowTaint: true,
+                taintTest: false,
+                onrendered: function(canvas) {
+                    canvas.id = "mycanvas";
+                    //生成base64图片数据
+                    var dataUrl = canvas.toDataURL();
+                    var newImg = document.createElement("img");
+                    newImg.src =  dataUrl;
+                    console.log($('.invite-bendi').attr('href', canvas.toDataURL()))
+                    $('.invite-bendi').attr('href', canvas.toDataURL());
+                    $('.invite-bendi').attr('download', 'qrcode.png');
+                    var html_canvas = canvas.toDataURL();
+                    document.body.appendChild(newImg);
+                    document.body.removeChild(newImg)
+                }
+            });
+        }
+        download()
+
+    })
+</script>
+<script>
+    $(function () {
+        $(".page-invite-qrcode").on("click",".code-qrcode",function () {
+            $(".page-invite-qrcode .invite-bottom").show()
+        })
+        $(".page-invite-qrcode").on("click",".invite-back",function () {
+            $(".page-invite-qrcode .invite-bottom").hide()
+        })
+    })
+</script>
+
+</body>
+</html>

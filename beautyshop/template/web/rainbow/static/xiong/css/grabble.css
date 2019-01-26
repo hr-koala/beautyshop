@@ -1,0 +1,683 @@
+/* 搜索商品 */
+.page-search #grabble{
+    display: block;
+    background: #e14594;
+    width: 100%;
+    height: 2.25rem;
+    position: fixed;
+    z-index: 20;
+    top: 1.9rem;
+    left: 0rem;
+}
+.page-search #grabble input{
+    background: rgba(255,255,255,.4);
+    width: 90%;
+    height: 1.5rem;
+    border-radius: 1.5rem;
+    margin: .3rem 5% 0rem 5%;
+    background-image: url('../img/sousuo.png');
+    background-repeat: no-repeat;
+    background-size: 1.15rem;
+    background-position: .30rem .20rem;
+    text-indent: 2rem;
+}
+.page-search #grabble input::-webkit-input-placeholder { 
+    color: #ffffff;
+}
+.page-search .types{
+    width: 100%;
+    position: fixed;
+    top: 4.25rem;
+    left: 0rem;
+    z-index: 20;
+    display: flex;
+    justify-content:space-around;
+}
+.page-search .types span{
+    display: block;
+    line-height: 1.7rem;
+    width: 25%;
+    height: 1.7rem;
+    font-size: .69rem;
+    text-align: center;
+    border-right: .01rem solid #e5e5e5;
+    border-bottom: .01rem solid #e5e5e5;
+    background: #fff;
+    background-repeat: no-repeat;
+    background-size: .38rem;
+    background-position: 3.29rem .65rem;
+}
+.page-search .types span:nth-child(4){
+    border-right:none;
+    background-image: url('../img/xia.png');
+}
+.page-search .types span:nth-child(2),.types span:nth-child(3){
+    background-image: url('../img/shangxia.png');
+}
+.page-search .conter{
+    width: 100%;
+    min-height: 27rem;
+    position: relative;
+    background: #fff;
+    top: 4rem;
+    left: 0rem;
+    padding-bottom: 3.5rem;
+}
+.page-search .air{
+    width: 30%;
+    margin: 0 35%;
+    position: relative;
+    top: 4rem;
+}
+.page-search .air img{
+    width: 90%;
+    margin-bottom: 1rem;
+}
+.page-search .goods-item{
+    width: 47%;
+    float: left;
+    margin-left: .37rem;
+    margin-top: .2rem;
+}
+.page-search .mask{
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.294);
+    position: fixed;
+    top: 0;
+    display: none;
+    left: 0;
+    z-index: 12;
+}
+.page-search .selects{
+    width: 100%;
+    min-height: 17.2rem;
+    position: fixed;
+    top: 5.97rem;
+    left: 0rem;
+    display: block;
+    background: #fff;
+    z-index: 30;
+}
+.page-search .classification{
+    /*height: 3rem;*/
+    border-bottom: 1px solid #e5e5e5;
+    display: flex;
+    width: 92%;
+    justify-content: space-between;
+    flex-flow: wrap;
+    margin: 0 auto;
+    padding-bottom: 0.5rem;
+}
+.page-search .classification span{
+    display: block;
+    float: left;
+    width: 22%;
+    line-height: 1rem;
+    font-size: .6rem;
+    height: 1rem;
+    border-radius: 1rem;
+    background: #edebeb;
+    margin: 0.5rem 1.6% 0 1.6%;
+    text-align: center;
+}
+.page-search .select-class{
+    width: 100%;
+    border-bottom: 1px solid #e5e5e5;
+}
+.page-search .titles{
+    height: 1.7rem;
+    width: 100%;
+    text-align: center;
+    line-height: 1.7rem;
+    font-size: .69rem;
+    border-bottom: 1px solid #e5e5e5;
+}
+
+.page-search .class-list{
+    width: 33%;
+    border-right: 1px solid #e5e5e5;
+    min-height: 10rem;
+    max-height: 15rem;
+    font-size: .69rem;
+    display: block;
+    text-align: center;
+    color: #3c3c3c;
+    overflow: auto;
+}
+.page-search .class-list ul{
+    height: 1.6rem;
+    display: block;
+    line-height: 1.6rem;
+}
+.page-search .class-on{
+    background: #182952;
+    color: #fff;
+}
+.page-search .sort{
+    width: 66.75%;
+    position: absolute;
+    color: #000;
+    left: 33.15%;
+    text-indent: -8rem;
+    top: 3.7rem;
+    display: none;
+    min-height: 10rem;
+    max-height: 15rem;
+    overflow: auto;
+}
+.page-search .sort li:hover{
+    background: #f1f1f1;
+}
+.page-search .btn{
+    width: 100%;
+    height: 2rem;
+}
+.cancel,.confirm{
+    width: 5rem;
+    height: 2rem;
+    font-size: .71rem;
+}
+.cancel{
+    color: #000000;
+    margin: 0 6.8rem 0 1rem;
+}
+.confirm{
+    color: #e14594;
+}
+
+
+
+
+
+
+
+
+
+
+/* 确认订单 */
+.page-order{
+    font-family: "SourceHanSansCN-Normal";
+}
+.page-order .conter{
+    overflow: hidden;
+}
+.page-order .warning:hover{
+    position: relative;
+    background-position: 5.7rem;
+    transition: 1.2s linear;
+}
+.page-order .warning{
+    width: 100%;
+    height: .24rem;
+    background-image: repeating-linear-gradient(-45deg,
+     #ffffff 2rem,
+      #e14594 2rem,
+       #e14594 2.4rem,
+        #ffffff 2.4rem,
+         #ffffff 2.8rem,
+          #7045af 2.8rem,
+           #7045af 3.2rem,
+            #ffffff 3.2rem,
+             #ffffff 3.6rem);
+             background-size: 5.7rem;
+}
+.page-order .prompt{
+    position: relative;
+    display: block;
+    width: 100%;
+    height: 1.5rem;
+    background-color: #f9d5e7eb;
+    line-height: 1.55rem;
+    color: #000;
+    text-indent: 2rem;
+    overflow: hidden;
+    white-space: nowrap;
+}
+.page-order .prompt p{
+    position: absolute;
+    left: 100%;
+}
+.page-order .mask-text{
+    float: left;
+    width: 10%;
+    display: block;
+    height: 1.5rem;
+    background-color: #fad7e9;
+    background-image: url(../img/laba.png);
+    background-repeat: no-repeat;
+    background-size: 1rem;
+    background-position: .6rem .25rem;
+    line-height: 1.55rem;
+    color: #000;
+    text-indent: 2rem;
+    overflow: hidden;
+    white-space: nowrap;
+    position: relative;
+    z-index: 10;
+}
+.page-order .hint{
+    -webkit-animation: 25s first-marquee linear infinite normal;
+    animation: 25s first-marquee linear infinite normal;
+    padding:0 15%;
+}
+@keyframes first-marquee {
+    0% {
+        -webkit-transform: translate3d(0, 0, 0);
+        transform: translate3d(0, 0, 0);
+    }
+    100% {
+        -webkit-transform: translate3d(-200%, 0, 0);
+        transform: translate3d(-200%, 0, 0);
+        display: none;
+    }
+}
+.page-order .hint-two{
+    -webkit-animation: 25s first-marquee linear 12s infinite normal;
+    animation: 25s first-marquee linear 12s infinite normal;
+    padding:0 15%;
+}
+@keyframes second-marquee {
+    0% {
+        -webkit-transform: translate3d(0%, 0, 0);
+        transform: translate3d(0%, 0, 0);
+    }
+    100% {
+        -webkit-transform: translate3d(-200%, 0, 0);
+        transform: translate3d(-200%, 0, 0);
+        display: none;
+    }
+}
+.page-order .new-address{
+    width: 100%;
+    height: 4rem;
+    display: block;
+    background: #fff9fc;
+}
+.page-order .new-address span{
+    float: left;
+}
+.page-order .imgplus{
+    width: 2.3rem;
+    height: 2.3rem;
+    background: #e14594;
+    border-radius: .3rem;
+    float: left;
+    margin: 0 0 0 1rem;
+    position: relative;
+    top: .83rem;
+}
+.page-order .imgplus img{
+    width: 55%;
+    top: 22.5%;
+    position: relative;
+    margin: 0 auto;
+}
+.page-order .text{
+    position: relative;
+    left: 1rem;
+    top: 1.45rem;
+    letter-spacing: 0rem;
+    color: #1c1c1c;
+    font-size: .74rem;
+    text-shadow: 0 0 0 #000;
+    font-weight: normal;
+    font-stretch: normal;
+}
+.page-order .right{
+    position: relative;
+    top: 1rem;
+    left: 9.1rem;
+    background-image: url('../img/xiaoyou.png');
+    background-repeat: no-repeat;
+    background-size: 1rem;
+    background-position: 0rem .45rem;
+    width: 3rem;
+    height: 3rem;
+    display: block;
+}
+.page-order .information{
+    width: 100%;
+    background: #fff;
+    margin: -0.45rem 0 0 0;
+}
+.page-order .commodity{
+    width: 100%;
+    padding: .7rem 0 0rem 0;
+    margin: 1rem 0 0 0;
+    height: 4.5rem;
+    background: #fafafa9c;
+}
+.page-order .commodity img{
+    width: 4.3rem;
+    margin: 0 0 0 .7rem;
+    float: left;
+}
+.page-order .info{
+    float: left;
+}
+.page-order .commodity p{
+    font-size: .7rem;
+    letter-spacing: 0rem;
+    color: #1c1c1c;
+    width: 82%;
+    text-shadow: 0 0 0 #000;
+    margin: 0 0 0 .5rem;
+    overflow: hidden;
+    max-width: 11.5rem;
+    max-height: 1.8rem;
+}
+.page-order .prices{
+    color: #e14594;
+    font-size: .67rem;
+    font-weight: 550;
+    position: relative;
+    top: 1rem;
+    margin: 0 0 0 .5rem;
+}
+.page-order .specification{
+    position: relative;
+    top: .6rem;
+    margin: 0 0 0 .5rem;
+    color: #b1b1b1;
+    overflow: hidden;
+    height: .8rem;
+    display: block;
+    max-width: 8rem;
+    font-size: .65rem;
+    white-space:nowrap; 
+}
+.page-order .offerprices span{
+    float: right;
+    color: #e14594;
+    font-size: .67rem;
+    text-shadow: 0 0 0 #e14594;
+    margin: 0 .8rem 0 0;
+}
+.page-order .commodprice{
+    
+}
+.page-order .distribution{
+    width: 100%;
+    background: #fff;
+    position: relative;
+    top: .5rem;
+}
+.page-order .distr,.page-order .offerprices{
+    width: 94%;
+    text-indent: .35rem;
+    height: 2rem;
+    margin: 0 3%;
+    text-shadow: 0 0 0 #000;
+    line-height: 2rem;
+    font-size: .69rem;
+    border-bottom: .05rem solid #f1f1f1;
+}
+.page-order .distr span{
+    float: right;
+    width: 5rem;
+    display: block;
+    background-image: url(../img/xiaoyou.png);
+    background-repeat: no-repeat;
+    background-size: .6rem;
+    text-indent: 0rem;
+    margin-right: -1.5rem;
+    background-position: 2.8rem .77rem;
+}
+.page-order .proxy-prices{
+    font-size: .69rem;
+    letter-spacing: 0rem;
+    color: #000000;
+    text-shadow: 0 0 0 #000;
+    margin: .8rem 0 0 .49rem;
+}
+.page-order .proxy{
+    text-shadow: 0 0 0 #e14594;
+    color: #e14594;
+    font-size: .75rem;
+}
+.page-order .old-prices{
+    color: #f49ac8;
+    text-shadow: 0 0 0 #fd7dbe;
+    text-decoration:line-through;
+    font-size: .65
+}
+.page-order .commodity-price,.page-order .commodprice{
+    width: 94%;
+    text-indent: .35rem;
+    height: 2rem;
+    margin: 0 3%;
+    text-shadow: 0 0 0 #979797;
+    line-height: 2rem;
+    font-size: .72rem;
+    border-bottom: .05rem solid #f1f1f1;
+}
+.page-order .commodity-price span,.page-order .commodprice span{
+    float: right;
+    color: #e14594;
+    font-size: .67rem;
+    text-shadow: 0 0 0 #fd7dbe;
+    margin: 0 .8rem 0 0;
+}
+.page-order .commodprice span{
+    text-decoration:line-through;
+    color: #f49ac8;
+}
+.page-order .bottom{
+    width: 100%;
+    height: 2.25rem;
+    background: #fff;
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    z-index: 100;
+    font-size: .8rem;
+    line-height: 2.25rem;
+}
+.page-order .btn{
+    float: right;
+    width: 42%;
+    height: 100%;
+    background: #182952;
+    font-size: .8rem;
+    color: #fff;
+}
+.page-order .bottom div{
+    width: 58%;
+    float: left;
+    text-indent: .8rem;
+}
+.page-order .bottom span{
+    color: #e14594;
+}
+.page-order .communication{
+    width: 100%;
+    padding-bottom: 3rem;
+    background: #fff;
+    position: relative;
+    top: .5rem;
+    border-top: .2rem solid #f1f1f1;
+}
+.page-order .freight,.page-order .leave-comments{
+    width: 94%;
+    text-shadow: 0 0 0 #000;
+    margin: 0 3%;
+    border-bottom: .05rem solid #f1f1f1;
+    height: 2rem;
+    line-height: 2rem;
+    font-size: .69rem;
+    text-indent: .5rem;
+}
+.page-order .freight span{
+    float: right;
+    text-shadow: none;
+    color: #888888;
+    font-size: .7rem;
+    margin: 0 .8rem 0 0;
+}
+.page-order .leave-comments input{
+    width: 76%;
+    text-indent: .25rem;
+    font-size: .69rem;
+}
+.page-order .communication>span{
+    float: right;
+    font-size: .69rem;
+    margin: 0 .8rem 0 0;
+    position: relative;
+    top: .9rem;
+}
+.page-order .existing{
+    width: 100%;
+    height: 4rem;
+    background: #fff9fc;
+    display: block;
+    color: #000;
+}
+.page-order .existing-left{
+    width: 25%;
+    height: 100%;
+    line-height: 2rem; 
+    text-align: center;
+    float: left;
+}
+.page-order .existing-right{
+    width: 67%;
+    height: 100%;
+    line-height: 1rem;
+    float: right;
+}
+.page-order .coordinate{
+    color: #b2acaf;
+}
+.page-order .write{
+    width: 60%;
+    height: 2rem;
+    position: absolute;
+    background: rgba(0, 0, 0, 0.342);
+    border-radius: .2rem;
+    color: #fff;
+    font-size: .8rem;
+    line-height: 2rem;
+    text-align: center;
+    transition: 1s;
+    top: 15rem;
+    margin: 0 20%;
+    z-index: 1000;
+    display: none;
+}
+.page-order .statu{
+    display: block;
+    width: 2rem;
+    height: .9rem;
+    border: .05rem solid #e14594;
+    text-align: center;
+    border-radius: .2rem;
+    line-height: .75rem;
+    color: #e14594;
+    margin: .11rem 0 0 1.34rem;
+}
+.page-order .coordinate{
+
+}
+.page-order .username{
+    font-size: .7rem;
+    color: #000000;
+    display: block;
+    margin: .2rem 0 0 0;
+    text-shadow: 0 0 0 #000000;
+}
+.page-order .phone-number{
+    display: block;
+    margin: .82rem 0 0 0;
+}
+.page-order .coordinate{
+    display: block;
+    margin: .3rem 0 0 0;
+}
+.page-order .e-right{
+    display: block;
+    width: 1rem;
+    height: 1rem;
+    background-image: url(../img/xiaoyou.png);
+    background-repeat: no-repeat;
+    background-position: 0rem 0rem;
+    background-size: .9rem;
+    position: relative;
+    top: -1.5rem;
+    right: -10.7rem;
+}
+
+
+
+
+
+
+
+
+
+
+/* 新增收货地址 */
+.page-adsedit{
+    background: #fff;
+    padding-bottom: 0;
+}
+.page-adsedit .main{
+    width: 100%;
+}
+.page-adsedit .main .inp-box{
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid #F1F1F1;
+}
+.page-adsedit .main .inp-box .name{
+    width: 3.5rem;
+    margin-right: 0.75rem;
+    text-shadow: 0 0 0 #ababab;
+    color: #5a5a5a;
+    font-size: 0.7rem;
+}
+.page-adsedit .main .inp-box .right{
+    flex: 1;
+}
+.page-adsedit .main .inp-box .right input{
+    width: 100%;
+    color: #424242;
+    font-size: 0.70rem;
+    border: none;
+}
+.page-adsedit .main .inp-qy .right{
+    position: relative;
+}
+.page-adsedit .main .inp-qy .right .select-value{
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    z-index: 2;
+    opacity: 0;
+}
+.page-adsedit .main .inp-qy .right .addr{
+    width: 100%;
+}
+.page-adsedit .main .btn-box{
+    width: 85%;
+    margin: 0 auto;
+    padding-top: 2rem;
+}
+.page-adsedit .btn-box .btn-blue{
+    background: #e14594;
+}
+.page-adsedit .btn-box button{
+    width: 100%;
+    text-align: center;
+    color: #fff;
+    font-size: 0.75rem;
+    padding: 0.5rem 0;
+    border-radius: 1rem;
+    border: none;
+}
+.page-adsedit .main input::-webkit-input-placeholder { 
+    color: #000000; 
+}

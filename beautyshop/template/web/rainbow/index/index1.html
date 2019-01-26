@@ -1,0 +1,25 @@
+<!--广告表 轮播图-->
+<!-- <adv pid ="2" limit="5" item="v">
+    <li><a href="{$v.ad_link}">
+        <img src="{$v[ad_code]}" title="{$v[title]}" style="{$v[style]}" alt="">
+    </a></li>
+</adv> -->
+
+<!--自定义导航-->
+<!-- <ul class="navitems clearfix" id="navitems">
+	<tpshop sql="SELECT * FROM `__PREFIX__navigation` where is_show = 1 and position = 'top' ORDER BY `sort` DESC" key="k" item='v'>
+	<li <?php if($_SERVER['REQUEST_URI']==str_replace('&amp;','&',$v[url])){ echo "class='selected'";}?>>
+			<a href="{$v[url]}" <if condition="$v[is_new] eq 1">target="_blank" </if> >{$v[name]}</a>
+			<img src="{$v[navigation_picture]}" style="width: 80px; height: 80px;">
+		</li>
+	</tpshop>
+</ul> -->
+
+<!-- 放在循环商品图的前面域名 -->
+<!-- 当前域名带http:// (去掉后面/) http://www.meirong.aaa -->
+<!-- {:substr($_SERVER["HTTP_REFERER"],0,-1)} -->
+
+<!-- 当前域名不带带http:// www.meirong.aaa-->
+<!-- {$_SERVER['SERVER_NAME']} -->
+<a href="{:U('Goods/details',['id'=>242])}">购买商品/加入购物车</a>
+<a href="{:U('Goods/categoryList',['id'=>1])}">商品分类</a>

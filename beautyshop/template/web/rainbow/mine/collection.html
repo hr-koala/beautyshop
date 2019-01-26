@@ -1,0 +1,98 @@
+<include file="public/header" title="我的收藏"  body="page-classify page-collection"/>
+<link rel="stylesheet" type="text/css" href="__STATIC__/tonghaoran/css/common.css">
+<link rel="stylesheet" type="text/css" href="__STATIC__/tonghaoran/css/mr_style.css">
+    <header id="header" class="">
+        <div class="icon-back" onclick="history.back()"></div>
+        <h5>我的收藏</h5>
+    </header>
+
+    <if condition="$goods neq null">
+        <div class="container" id="all">
+            <div class="main flex-row main_collection">
+                <div class="goods">
+                    <div class="list">
+                        <volist name="goods" id="list">
+                            <a href="{:U('cosmetology/Goods/details',['id'=>$list['goods_id']])}" class="box flex-row" id="remove{$list['goods_id']}">
+                                <div class="img"><img src="{$list[original_img]}" alt=""></div>
+                                <div class="right flex-column flex-column_y">
+                                    <div class="name">
+                                        <span id="">{$list[goods_name]}</span>
+                                        <div class="icon-del" id="goodsids{$list['goods_id']}"></div>
+                                    </div>
+                                    <div class="bot flex-row">
+                                        <div class="price">¥{$list[shop_price]}</div>
+                                    </div>
+                                </div>
+                            </a>
+                        </volist>
+                    </div>
+                    <div class="nomore flex-row">
+                        <div class="xian"></div>
+                        <p>到底了~</p>
+                        <div class="xian"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="del_collection">
+                <p>确定取消收藏？</p>
+                <div class="del_collection_btn">
+                    <input type="button" name="cancel" id="" value="取消" />
+                    <input type="button" name="confirm" id="" value="确定" />
+                </div>
+            </div>
+            <div class="mask"></div>
+        </div>
+    <else />
+        <div class="setSuccess collection">
+            <img src="__STATIC__/tonghaoran/images/prod5.png"/>
+            <p>暂时还没有收藏哦！</p>
+        </div>
+    </if>
+    
+
+
+<include file="public/footer"/>
+
+</body>
+
+<script type="text/javascript" src="__STATIC__/tonghaoran/js/vue.js"></script>
+<script>
+$(function(){
+    var vm = new Vue({
+        el: '#all'
+    });
+	
+	$(".icon-del").on("mousedown",function(){
+		$(".del_collection").show();
+		$(".mask").show();
+        var goods_id = $(this).attr('id').substring(8);
+        $(".del_collection_btn").children("input[name='confirm']").eq(0).on("click",function(){
+            $.post("{:U('cosmetology/Mine/remove_collection')}", {goods_id:goods_id},function(datas){
+                var values = JSON.parse(datas);
+                $(".del_collection").hide();
+                $(".mask").hide();
+                if(values.status == 1){
+                    $('#remove'+goods_id).remove();
+                    dialogFun_two('已取消')
+                }else{
+                    dialogFun_two('取消收藏失败')
+                }
+            });
+        });
+	});
+
+	$(".del_collection_btn").children("input[name='cancel']").eq(0).on("click",function(){
+		$(".del_collection").hide();
+		$(".mask").hide();
+	});
+
+    function dialogFun_two(str){
+        webToast(str,"middle",3000);
+    }
+
+
+});
+
+</script>
+</html>

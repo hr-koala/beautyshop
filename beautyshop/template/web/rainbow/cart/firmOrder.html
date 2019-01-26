@@ -1,0 +1,171 @@
+<include file="public/header" title="确认订单"  body="page-order"/>
+<link rel="stylesheet" type="text/css" href="__STATIC__/xiong/css/grabble.css">
+<header id="header" class="">
+    <div class="icon-back" onclick="history.back()"></div>
+    <h5>确认订单</h5>
+</header>
+
+
+<div class="conter">
+    <div class="warning"></div>
+    <!-- 提示 -->
+    <a href="" class="prompt">
+        <span class="mask-text"></span>
+        <p class="hint">{$order_advertising_news}</p>
+        <p class="hint-two">{$order_advertising_news}</p>
+    </a>
+
+    <div class="address">
+        <!-- 新建地址 -->
+        <if condition="$address neq null">
+            <a class="existing" href="{:U('cosmetology/Mine/address',['url'=>'firm_order_url'])}">
+                <div class="existing-left">
+                    <span class="username">{$address['consignee']}</span>
+                    <span class="statu">默认</span>
+                </div>
+                <div class="existing-right">
+                    <span class="phone-number">{$address['mobile']}</span>
+                    <span class="coordinate">{$regionList[$address['province']]}{$regionList[$address['city']]}{$regionList[$address['district']]}{$regionList[$address['twon']]}{$address['address']}</span>
+                    <span class="e-right"></span>
+                </div>
+            </a>
+            <input type="hidden" class="is_address" value="1">
+        <else />
+            <a class="new-address" href="{:U('cosmetology/User/newAddress',['url'=>'firm_order_url'])}">
+                <div class="imgplus">
+                    <img src="__STATIC__/xiong/img/jia.png">
+                </div>
+                <span class="text">新建收货地址</span>
+                <span class="right"></span>
+            </a>
+            <input type="hidden" class="is_address" value="0">
+        </if>
+
+        <!-- 提示填写收货地址 -->
+        <div class="write">请选择收获地址</div>
+
+    </div>
+
+    <div class="information">
+        <volist name="cartList" id="list">
+            <div class="commodity">
+                <img src="{$list[goods_id]|goods_thum_images=100,100}">
+                <div class="info" style="max-width: 65%;">
+                    <p>{$list[goods_name]}</p>
+                    <notempty name="$list[spec_key_name]">
+                        <span class="specification">规格:{$list[spec_key_name]}</span>
+                    </notempty>
+                    <if condition="($level neq null) AND ($taxation_form eq null)">
+                        <div class="proxy-prices">代理价:
+                            <span class="proxy">¥{$list[member_goods_price]}</span>
+                            <span class="old-prices">¥{$list[goods_price]}</span>
+                        </div>
+                    <elseif condition="($level neq null) AND ($taxation_form neq null)" />
+                        <div class="prices">¥{$list[member_goods_price]*2}</div>
+                    <else />
+                        <div class="prices">¥{$list[member_goods_price]}</div>
+                    </if>
+                    <!-- <notempty name="$level">
+                        <div class="proxy-prices">代理价:
+                            <span class="proxy">¥{$list[member_goods_price]}</span>
+                            <span class="old-prices">¥{$list[goods_price]}</span>
+                        </div>
+                    <else />
+                        <div class="prices">¥{$list[member_goods_price]}</div>
+                    </notempty> -->
+                </div>
+                <span>×{$list[goods_num]}</span>
+            </div>
+        </volist>
+
+        <!-- 清除浮动 -->
+        <div style="clear:both;"></div>
+        <div class="distribution">
+            <div class="distr">配送方式
+                <span>快递发货</span>
+            </div>
+            <if condition="($level neq null) AND ($taxation_form eq null)">
+                <div class="commodprice">商品原价
+                    <span>¥{$original_price}</span>
+                </div>
+                <div class="offerprices">代理优惠价
+                    <span>¥{$cartPriceInfo['total_fee']}</span>
+                </div>
+            <elseif condition="($level neq null) AND ($taxation_form neq null)" />
+                <div class="commodity-price">商品金额
+                    <span>¥{$cartPriceInfo['total_fee']*2}</span>
+                </div>
+            <else />
+                <div class="commodity-price">商品金额
+                    <span>¥{$cartPriceInfo['total_fee']}</span>
+                </div>
+            </if>
+            <!-- <notempty name="$level">
+                <div class="commodprice">商品原价
+                    <span>¥{$cartPriceInfo['total_fee']*2}</span>
+                </div>
+                <div class="offerprices">代理优惠价
+                    <span>¥{$cartPriceInfo['total_fee']}</span>
+                </div>
+            <else />
+                <div class="commodity-price">商品金额
+                    <span>¥{$cartPriceInfo['total_fee']}</span>
+                </div>
+            </notempty> -->
+
+        </div>
+    </div>
+
+    <form action="{:U('Order/placeOrder')}" method="post">
+        <if condition="$taxation_form neq null">
+            <input type="hidden" name="taxation_form" value="{$taxation_form}">
+        </if>
+        <notempty name="$actions">
+            <input type="hidden" name="actions" value="{$actions}">
+            <input type="hidden" name="goods_id" value="{$cartList[0]['goods_id']}">
+            <input type="hidden" name="goods_num" value="{$cartList[0]['goods_num']}">
+            <input type="hidden" name="item_id" value="{$cartList[0]['item_id']}">
+        </notempty>
+        <input type="hidden" name="address_id" value="{$address['address_id']}">
+        <div class="communication" style="padding-bottom: 5rem;">
+            <div class="freight">
+                运费:
+                <span>￥0</span>
+            </div>
+            <div class="leave-comments">
+                买家留言:
+                <input type="search" name="user_note" value="" placeholder="卖家留言">
+            </div>
+            <span>共{$cartPriceInfo['goods_num']}件商品</span>
+        </div>
+        <div class="bottom">
+            <div>合计:<span>￥
+                <if condition="($level neq null) AND ($taxation_form eq null)">
+                    {$cartPriceInfo['total_fee']}
+                <elseif condition="($level neq null) AND ($taxation_form neq null)" />
+                    {$cartPriceInfo['total_fee']*2}
+                <else />
+                    {$cartPriceInfo['total_fee']}
+                </if>
+            </span></div>
+            <input type="submit" class="btn" value="提交订单">
+        </div>
+    </form>
+</div>
+
+<script type="text/javascript">
+    $('.btn').click(function(){
+        var is_address = $('.is_address').val();
+        if(is_address == 0){
+            $('.write').show();
+            setTimeout(function(){
+                $('.write').hide();//找到对应的标签隐藏
+            },2000)//3000是表示3秒后执行隐藏代码
+            return false;
+        }
+    })
+</script>
+
+    
+</body>
+</html>

@@ -1,0 +1,120 @@
+<include file="public/header" title="报单管理"  body="page-income page-manage"/>
+<link rel="stylesheet" type="text/css" href="__STATIC__/tonghaoran/css/common.css">
+<link rel="stylesheet" type="text/css" href="__STATIC__/tonghaoran/css/mr_style.css">
+<link rel="stylesheet" href="__STATIC__/tonghaoran/css/FlexoCalendar.css">
+<script src="__STATIC__/tonghaoran/js/FlexoCalendar.js"></script>
+<header id="header" class="">
+    <div class="icon-back" onclick="history.back()"></div>
+    <h5>报单管理</h5>
+</header>
+
+<div class="container">
+    <!--<div class="no-data">
+        <img src="__STATIC__/tonghaoran/images/icon_income_no.png">
+        <div class="no-data-txt">
+            暂无!
+        </div>
+    </div>-->
+    <div class="top">
+        <div class="num"><span>{$adopt_num}</span></div>
+        <div class="name">审核通过人数</div>
+        <ul class="tit flex-row">
+            <!-- 累计获得报单币 bank_note_get、已使用报单币 bank_note_pay、剩余报单币 bank_note、 -->
+            <li class="box">
+                <p class="p1">{$user_info[bank_note_get]}</p>
+                <p class="p2">累计报单币</p>
+            </li>
+            <li class="box">
+                <p class="p1">{$user_info[bank_note]}</p>
+                <p class="p2">未使用</p>
+            </li>
+            <li class="box">
+                <p class="p1">{$user_info[bank_note_pay]}</p>
+                <p class="p2">已使用</p>
+            </li>
+        </ul>
+    </div>
+
+    <div class="main">
+        <div class="manage-top">
+            <div class="total">
+                <div class="all {$type == 'all'?on:''}" onclick="window.location.href='{:U('cosmetology/Agent/reportManagement',['type'=>'all'])}'">全部</div>
+                <div class="all {$type == 'auditing'?on:''}" onclick="window.location.href='{:U('cosmetology/Agent/reportManagement',['type'=>'auditing'])}'">提交待审核</div>
+                <div class="all {$type == 'adopt'?on:''}" onclick="window.location.href='{:U('cosmetology/Agent/reportManagement',['type'=>'adopt'])}'">审核通过</div>
+            </div>
+        </div>
+
+        <div class="no-data">
+            <img src="__STATIC__/tonghaoran/images/icon_income_no.png">
+            <div class="no-data-txt">
+                暂无!
+            </div>
+        </div>
+        <div class="has-data">
+            <ul>
+                <volist name="user_list" id="list">
+                    <li class="manage-box">
+                        <div class="manage-box-left">
+                            <div class="manage-img">
+                                <img src="<if condition='$list[head_pic] neq null'>{$list[head_pic]}<else />__STATIC__/tonghaoran/images/prod6.png</if>">
+                            </div>
+                            <div class="manage-box-txt">
+                                <div class="manage-box-left-name">
+                                    <if condition="$list['nickname'] neq ''">{$list[nickname]}<else />{$list[mobile]}</if>
+                                </div>
+                                <div class="manage-box-left-date">
+                                    {$list[reg_time]|date='Y-m-d',###}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="baodanbi">
+                            <!-- <div class="baodanbi-txt">报单币</div> -->
+                            <div class="baodanbi-stats"><if condition="$list['registration_type'] eq 1">申请中<elseif condition="$list['registration_type'] eq 2" />已完成</if></div>
+                        </div>
+                        <div class="baodan-num">
+                            <!-- <div class="baodanbi-num">+15000</div> -->
+                            <div class="baodanbi-num-buy"><if condition="$list['registration_type'] eq 1"><a href="{:U('Agent/taxationForm',['user_id'=>$list[user_id]])}">去购买</a><elseif condition="$list['registration_type'] eq 2" /><div class="baodanbi-num-buy baodanbi-num-shiyong"><span href="">已完成</span> </div></if>
+                             </div>
+                        </div>
+                    </li>
+                </volist>
+               <!--  <li class="manage-box">
+                    <div class="manage-box-left">
+                        <div class="manage-img">
+                            <img src="__STATIC__/tonghaoran/images/prod6.png">
+                        </div>
+                        <div class="manage-box-txt">
+                            <div class="manage-box-left-name">
+                                点点的光
+                            </div>
+                            <div class="manage-box-left-date">
+                                2018-01-01
+                            </div>
+                        </div>
+                    </div>
+                    <div class="baodanbi">
+                        <div class="baodanbi-txt">报单币</div>
+                        <div class="baodanbi-stats">提交待审核</div>
+                    </div>
+                    <div class="baodan-num">
+                        <div class="baodanbi-num">15000</div>
+                        <div class="baodanbi-num-buy baodanbi-num-shiyong"><a href="">已使用</a> </div>
+                    </div>
+                </li> -->
+            </ul>
+
+        </div>
+    </div>
+</div>
+
+
+<include file="public/footer"/>
+<script>
+    $(".page-manage .total .all").on("click",function () {
+        $(".page-manage .total .all").removeClass("on")
+        $(this).addClass("on")
+    })
+</script>
+
+</body>
+</html>

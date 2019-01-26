@@ -1,0 +1,50 @@
+<div class="has-data">
+    <ul>
+        <volist name="bonus_list" id="bonus">
+            <li class="income-detail-jiangli">
+                <div class="income-jiangli-left">
+                    <div class="income-jiangli-img">
+                        <if condition="$bonus[type] eq 1">
+                            <img src="__STATIC__/tonghaoran/images/icon_qiandai.png">
+                        <elseif condition="$bonus[type] eq 2" />
+                            <img src="__STATIC__/tonghaoran/images/icon_tuiguang.png">
+                        <elseif condition="$bonus[type] eq 3" />
+                            <img src="__STATIC__/tonghaoran/images/icon_jinji.png">
+                        <elseif condition="$bonus[type] eq 5" />
+                            <img src="__STATIC__/tonghaoran/images/icon_tongji.png">
+                        <elseif condition="$bonus[type] eq 6" />
+                            <img src="__STATIC__/tonghaoran/images/icon_xiaoshou.png">
+                        <elseif condition="$bonus[type] eq 7" />
+                            <img src="__STATIC__/tonghaoran/images/icon_jifen.png">
+                        </if>
+                    </div>
+                    <div class="income-jiangli-txt">
+                        <div class="income-jiangli-left-txt">
+                            <if condition="$bonus[type] eq 1">直推奖励
+                            <elseif condition="$bonus[type] eq 2" />推广奖励
+                            <elseif condition="$bonus[type] eq 3" />晋级奖励
+                            <elseif condition="$bonus[type] eq 5" />同级奖励
+                            <elseif condition="$bonus[type] eq 6" />销售提成
+                                <if condition="$bonus['user_money'] eq 0">&nbsp;<span style="color: #4f5352;">(待返)</span></if>
+                            <elseif condition="$bonus[type] eq 7" />积分红利
+                                <if condition="$bonus['user_money'] eq 0">&nbsp;<span style="color: #4f5352;">(待返)</span></if>
+                            </if>
+                        </div>
+                        <div class="income-jiangli-left-date">
+                            {$bonus['change_time']|date='Y-m-d H:i:s',###}
+                        </div>
+                    </div>
+                </div>
+                <div class="income-jiangli-right">
+                    <if condition="($bonus[type] eq 6) AND ($bonus['user_money'] eq 0)">
+                        <span style="color: #6f6d69;">+ {$bonus['sales_award']}</span>
+                    <elseif condition="($bonus[type] eq 7) AND ($bonus['user_money'] eq 0)" />
+                        <span style="color: #6f6d69;">+ {$bonus['bonus']}</span>
+                    <else />
+                        + {$bonus['user_money']}
+                    </if>
+                </div>
+            </li>
+        </volist>
+    </ul>
+</div>

@@ -1,0 +1,22 @@
+<include file="public/header" title="分销佣金"  body="page-canWithdraw"/>
+<link rel="stylesheet" type="text/css" href="__STATIC__/tonghaoran/css/common.css">
+<link rel="stylesheet" type="text/css" href="__STATIC__/tonghaoran/css/mr_style.css">
+
+<header id="header" class="">
+    <div class="icon-back" onclick="history.back()"></div>
+    <h5>可提现佣金</h5>
+</header>
+
+<div class="container">
+    <div class="top">
+        <div class="num">￥<span>{$user_info['user_money']}</span></div>
+        <div class="name">累计佣金</div>
+    </div>
+</div>
+
+<div class="btn-box">
+    <a href="{$url}" class="btn btn-blue">提现到银行卡</a>
+</div>
+<include file="public/footer"/>
+</body>
+</html>

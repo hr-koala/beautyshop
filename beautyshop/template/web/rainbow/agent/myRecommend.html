@@ -1,0 +1,73 @@
+<!-- <!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="initial-scale=1,maximum-scale=1,minimum-scale=1" />
+
+    <meta name="apple-mobile-web-app-capable" content="yes">
+
+    <meta name="format-detection" content="telephone=no">
+    <title>我的直推</title>
+    <link rel="stylesheet" href="css/common.css">
+    <link rel="stylesheet" href="css/mr_style.css">
+    <script type="text/javascript" src="js/jquery.min.js"></script>
+</head>
+<body class="page-direct"> -->
+<include file="public/header" title="我的直推"  body="page-invite"/>
+<link rel="stylesheet" type="text/css" href="__STATIC__/tonghaoran/css/common.css">
+<link rel="stylesheet" type="text/css" href="__STATIC__/tonghaoran/css/mr_style.css">
+
+<header id="header" class="">
+    <div class="icon-back" onclick="history.back()"></div>
+    <h5>我的直推</h5>
+</header>
+
+<div class="container">
+    <div class="top">
+        <div class="num"><span>{$subordinate[count]}</span></div>
+        <div class="name">我的直推（人）</div>
+    </div>
+    <div class="invite-con">
+        <div class="con-top">
+            <div class="time">注册时间</div>
+            <div class="time">手机号码</div>
+            <div class="time">当前等级</div>
+            <div class="time">代理人数</div>
+        </div>
+        <div class="con-p">
+            <volist name="subordinate['invitation_record']" id="record">
+                <div class="con-txt">
+                    <div class="time">{$record[reg_time]|date='Y-m-d',###}</div>
+                    <div class="time">{:substr_replace($record[mobile], '****', 3, 4)}</div>
+                    <div class="time">{$record[level_name]}</div>
+                </div>
+            </volist>
+        </div>
+    </div>
+    <div class="invite-no">
+        <img src="__STATIC__/tonghaoran/images/icon_no-daili.png">
+        <div class="no-num">
+            暂无，去努力邀请好友吧~
+        </div>
+    </div>
+</div>
+
+
+<include file="public/footer"/>
+
+<script>
+    $(function () {
+        console.log($(".top .num span").text())
+        if($(".top .num span").text() == 0){
+            $(".invite-con").hide()
+            $(".invite-no").show()
+        }else {
+            $(".invite-con").show()
+            $(".invite-no").hide()
+        }
+    })
+</script>
+
+</body>
+</html>

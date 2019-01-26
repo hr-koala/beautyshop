@@ -1,0 +1,64 @@
+<include file="public/header" title="分销中心"  body="page-miorder report-currency"/>
+<link rel="stylesheet" type="text/css" href="__STATIC__/tonghaoran/css/common.css">
+<link rel="stylesheet" type="text/css" href="__STATIC__/tonghaoran/css/mr_style.css">
+
+<header id="header" class="">
+    <div class="icon-back" onclick="history.back()"></div>
+    <h5>报单币</h5>
+</header>
+
+<div class="container">
+    <div class="curren-top">
+        <div class="lf">共计:{$user_info[bank_note_get]}</div>
+        <div class="rg">剩余：{$user_info[bank_note_pay]}</div>
+    </div>
+    <div class="head">
+        <ul class="flex-row">
+            <li data-index="0" class="{$type == 1?'':on}" onclick="window.location.href='{:U('cosmetology/Agent/bankNote')}'">已入账</li>
+            <li data-index="1" class="{$type == 1?on:''}" onclick="window.location.href='{:U('cosmetology/Agent/bankNote',['type'=>1])}'">已使用</li>
+        </ul>
+    </div>
+
+    <div class="no-data">
+        <!--<img src="images/icon-null-order.png">-->
+    </div>
+    <div class="list has-data">
+        <if condition="$list neq null">
+            <div class="box">
+                <ul>
+                    <volist name="list" id="val">
+                        <li class="">
+                            <div class="box-lf">
+                                <div class="num">{$val[bank_note]}</div>
+                                <div class="time">
+                                    入账时间：{$val[change_time]|date='Y-m-d H:i:s',###}
+                                </div>
+                            </div>
+                        </li>
+                    </volist>
+                </ul>
+            </div>
+        </if>
+    </div>
+
+
+</body>
+<!-- <footer id="footer-nav"></footer>
+<script type="text/javascript">var footerNav =  5;</script>
+<script type="text/javascript" src="js/footer.js"></script> -->
+<include file="public/footer"/>
+
+<script>
+
+    $(function(){
+        $('.head ul li').on('click', function(){
+            var index = $(this).data('index')
+            $(this).addClass("on").siblings().removeClass('on')
+        })
+
+
+
+    })
+
+</script>
+</html>

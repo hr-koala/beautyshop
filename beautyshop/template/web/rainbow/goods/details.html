@@ -1,0 +1,363 @@
+<include file="public/header" title="详情"  body="page-detail"/>
+<header id="header" class="">
+    <div class="icon-back" onclick="history.back()"></div>
+    <h5>详情</h5>
+</header>
+<div class="container" id="all">
+    <div class="swiper-container">
+        <div class="swiper-wrapper">
+            <volist name="goods_images_list" id="img">
+                <div class="swiper-slide img"><img src="{$img['image_url']}" alt=""></div>
+            </volist>
+        </div>
+        <div class="swiper-pagination"></div>
+    </div>
+
+    <div class="top">
+        <div class="name">{$goods['goods_name']}</div>
+        <div class="qian flex-row">
+            <div class="price">
+                <!-- ¥<if condition="($level eq null) AND ($goods['is_agent'] eq '0')">
+                    <input type="hidden" class="final_price" value="{$goods['shop_price']}">
+                    <input type="hidden" class="multiple" value="1">
+                    {$goods['shop_price']}
+                <else />
+                    <input type="hidden" class="final_price" value="{$goods['shop_price']/2}">
+                    <input type="hidden" class="multiple" value="2">
+                    {$goods['shop_price']/2}
+                </if> -->
+
+                ¥<if condition="$level neq null">
+                    <input type="hidden" class="final_price" value="{$goods['shop_price']/2}">
+                    <input type="hidden" class="multiple" value="2">
+                    {$goods['shop_price']/2}
+                <else />
+                    <input type="hidden" class="final_price" value="{$goods['shop_price']}">
+                    <input type="hidden" class="multiple" value="1">
+                    {$goods['shop_price']}
+                </if>
+
+            </div>
+            <div class="like flex-row" v-if="!isLikeFlag" @click="changeLikeFun">
+                <div class="icon icon-like"></div>
+                <p>关注</p>
+            </div>
+            <div class="like flex-row" v-else @click="changeLikeFun">
+                <div class="icon icon-like1"></div>
+                <p>已关注</p>
+            </div>
+        </div>
+        <div class="yun flex-row">
+            <p>运费：免运费</p>
+            <p>剩余：{$goods['store_count']}</p>
+        </div>
+        <div class="tag flex-row">
+            <volist name="attribute" id="attr">
+                <if condition="$attr['status'] neq 0">
+                    <div class="box flex-row">
+                        <div class="icon icon-dui"></div>
+                        <p>{$attr['name']}</p>
+                    </div>
+                </if>
+            </volist>
+            <!-- <div class="box flex-row">
+                <div class="icon icon-dui"></div>
+                <p>企业认证</p>
+            </div>
+            <div class="box flex-row">
+                <div class="icon icon-dui"></div>
+                <p>快递送货</p>
+            </div> -->
+        </div>
+    </div>
+
+    <div class="main">
+        <div class="tit"><p>商品详情</p></div>
+        <div class="detail">
+            <!-- <img src="__STATIC__/images/banner2.png" alt=""> -->
+            {$goods['goods_content']|htmlspecialchars_decode}
+        </div>
+    </div>
+
+    <div class="floor flex-row">
+        <a href="{:U('cosmetology/Cart/cartList')}" title="" class="box">
+            <div class="icon icon-cart"></div>
+            <p>购物袋</p>
+        </a>
+        <div class="btn add-cart" @click="addCartFun"><p>加入购物袋</p></div>
+        <div class="btn bg1 payment" @click="paymentFun"><p>立即付款</p></div>
+    </div>
+
+    <div class="mask" v-show="isShowSpecPopFlag" @click="hideSpecPopFun"></div>
+    <div class="spec-pop" v-show="isShowSpecPopFlag">
+        <div class="icon close" @click="hideSpecPopFun"></div>
+        <div class="goods flex-row">
+            <div class="img"><img src="{$goods['original_img']}" alt=""></div>
+            <div class="right flex-column">
+                <div class="name">{$goods['goods_name']}</div>
+                <div class="price">¥{{buy.price}}</div>
+            </div>
+        </div>
+        <div class="list">
+            <div class="box flex-row" v-for="(item, key, index) in specList">
+                <div class="name">{{key}}：</div>
+                <ul class="flex-row">
+                    <li v-for="(cit, cis) in item" @click="chooseSpecItem" :data-id="cit.item_id" :data-index="index">{{cit.item}}</li>
+                </ul>
+            </div>
+        </div>
+        <div class="shul flex-row">
+            <div class="left">
+                <div class="name">数量：</div>
+                <p class="surplus">剩余{{buy.store_count}}件</p>
+            </div>
+            <div class="set-num flex-row">
+                <div class="icon sub" @click="subNumFun">-</div>
+                <div class="num">{{buy.num}}</div>
+                <div class="icon add" @click="addNumFun">+</div>
+            </div>
+        </div>
+    </div>
+    
+</div>
+
+</body>
+
+<script type="text/javascript" src="__STATIC__/js/swiper.min.js"></script>
+<script type="text/javascript" src="__STATIC__/js/dialog-plus-min.js"></script>
+<script type="text/javascript" src="__STATIC__/js/vue.js"></script>
+<script>
+
+$(function(){
+    var goods_id = {$goods['goods_id']};
+    var vm = new Vue({
+        el: '#all',
+        data: {
+            isShowSpecPopFlag: false, //是否显示规格弹窗
+            specArr: [], //选择的规格id数组
+            buy: {}, //选择的规格和数量
+            isLikeFlag: false, //是否已关注
+        },
+        computed: {
+            /*规格数组*/
+            specList: function(){
+                var arr = {$filter_spec};
+                console.log(arr)
+                return arr;
+            },
+            /*规格组合数组*/
+            specGoods: function(){
+                var arr = {$spec_goods_price};
+                console.log(arr)
+                return arr;
+            }
+        },
+        methods: {
+            /*初始化*/
+            init: function(){
+                var buy = {
+                    num: 1,
+                    price: $('.price .final_price').val(),
+                    store_count: {$goods['store_count']}, //剩余
+                }
+                this.buy = buy;
+                if({$collect} > 0){
+                    this.isLikeFlag = true
+                }else{
+                    this.isLikeFlag = false
+                }
+            },
+            /*改变关注状态*/
+            changeLikeFun: function(){
+                if({$user_id} === 0){
+                    dialogFun('立即登陆',"{:U('cosmetology/User/login',['url'=>'/cosmetology/Goods/details.html?id="+goods_id+"'])}");
+                    this.isLikeFlag = false
+                }else{
+                    this.isLikeFlag = !this.isLikeFlag;
+                    var follow = 0;
+                    if(this.isLikeFlag == true){
+                        var follow = 1;
+                    }
+                    $.post("{:U('cosmetology/Goods/follow')}", {follow:follow,goods_id:{$goods['goods_id']}},function(datas){
+                        var values = JSON.parse(datas);
+                        dialogFun_two(values['msg']);
+                    });
+                }
+            },
+            /*选择规格项*/
+            chooseSpecItem: function(e){
+                var id = $(e.target).data('id')
+                var index = $(e.target).data('index')
+                if(this.specArr[index] != id){
+                    this.specArr[index] = id;
+                    $(e.target).addClass('on').siblings().removeClass('on')
+                    this.countSpecFun()
+                }
+            },
+            /*加入购物袋*/
+            addCartFun: function(){
+                if(this.hasSpecFun()){
+                    if({$user_id} === 0 || {$user_id} === '0'){
+                        window.location.href = '/cosmetology/User/login.html?url=/cosmetology/Goods/details.html?id='+goods_id;
+                        return false;
+                    }
+                    var id = '';
+                    if(this.buy.spec){
+                        id = this.buy.spec.item_id;
+                    }
+                    var num = $('.num').text();
+                    $.ajax({
+                        type : "GET",
+                        dataType: "json",
+                        url:"{:U('cosmetology/Cart/ajaxAddCart')}",
+                        data: {goods_id: goods_id, goods_num: num,item_id:id},
+                        success: function(data){
+                            if(data.status == 1){
+                                vm.hideSpecPopFun();
+                            }
+                            dialogFun_two(data.msg)
+                        }
+                    });
+                }
+            },
+            /*立即付款*/
+            paymentFun: function(){
+                if(this.hasSpecFun()){
+                    if({$user_id} === 0 || {$user_id} === '0'){
+                        window.location.href = '/cosmetology/User/login.html?url=/cosmetology/Goods/details.html?id='+goods_id;
+                        return false;
+                    }
+                    var id = '';
+                    if(this.buy.spec){
+                        id = this.buy.spec.item_id;
+                    }
+                    var num = $('.num').text();
+                    window.location.href = '/cosmetology/Cart/firmOrder.html?goods_id='+goods_id+'&goods_num='+num+'&item_id='+id+'&action=buy_now';
+                }
+            },
+            /*判断是否显示弹窗 或 有规格*/
+            hasSpecFun: function(){
+                if(this.isShowSpecPopFlag){
+                    if(this.specList && $('.spec-pop .list .box').length > 0){
+                        if(!this.buy.spec){
+                            dialogFun('请先选择规格')
+                            return false;
+                        }
+                        if(this.buy.store_count < this.buy.num){
+                            dialogFun('库存不足')
+                            return false;
+                        }
+                        if({$user_id} === 0 || {$user_id} === '0'){
+                            window.location.href = '/cosmetology/User/login.html?url=/cosmetology/Goods/details.html?id='+goods_id;
+                            return false;
+                        }
+                    }
+                    return true;
+                }else{
+                    this.isShowSpecPopFlag = true;
+                    
+                    return false;
+                }
+            },
+            /*减*/
+            subNumFun: function(){
+                if(this.buy.num > 1){
+                    this.buy.num -= 1;
+                }
+            },
+            /*加*/
+            addNumFun: function(){
+                if(this.buy.num < this.buy.store_count){
+                    this.buy.num += 1;
+                }
+            },
+            /*隐藏规格弹窗*/
+            hideSpecPopFun: function(){
+                this.isShowSpecPopFlag = false;
+            },
+            /*计算规格*/
+            countSpecFun: function(){
+                var arr = this.specArr.join('_').split('_');
+                var len = 0;
+                for(var i = 0; i < arr.length; i++){
+                    if(arr[i]){
+                        len++;
+                    }else{
+                        break;
+                    }
+                }
+
+                if(len < $('.spec-pop .list .box').length){
+                    return;
+                }
+                var list = this.specGoods;
+                arr.sort();
+                var str = arr.join('_')
+                var obj = {};
+                for(var i in list){
+                    var a = list[i].key.trim().split('_').sort().join('_');
+                    if(a === str){
+                        obj = list[i];
+                        break;
+                    }
+                }
+                var buy = this.buy;
+                buy.spec = obj;
+                var multiple = $('.multiple').val();
+                var price = obj.price / multiple;
+                var a = price.toString().indexOf('.');
+                if(a >= 0){
+                    a += 3;
+                    var b = price.toString().charAt(a)
+                    a -= 1;
+                    var c = price.toString().charAt(a)
+                    if(b >= 5){
+                        c++;
+                    }
+                    var ar = price.toFixed(2).toString().split('');
+                    ar[a] = c;
+                    price = ar.join('')
+                }
+                console.log(a)
+                // buy.price = Math.round(obj.price/multiple);
+                buy.price = price;
+                buy.store_count = obj.store_count;
+                console.log(buy.store_count)
+            }
+        }
+    })
+
+    vm.init()
+
+    var mySwiper = new Swiper('.swiper-container', {
+        autoplay: {
+            delay: 3000
+        },
+        loop : true,
+        pagination: {
+            el: '.swiper-pagination',
+        },
+    })
+})
+
+function dialogFun(str,url=''){
+    dialog({
+        width: 280,
+        title: '提示',
+        content: str,
+        cancel: false,
+        okValue: '确定',
+        ok: function(){
+            if(url != ''){
+                window.location.href = url;
+            }
+        }
+    }).showModal();
+}
+
+function dialogFun_two(str){
+    webToast(str,"middle",3000);
+}
+
+</script>
+</html>

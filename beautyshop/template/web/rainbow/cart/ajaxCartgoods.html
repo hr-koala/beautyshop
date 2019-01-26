@@ -1,0 +1,50 @@
+<div class="main">
+    <div class="list">
+        <volist name="cartList" id="list" key='k'>
+            <div class="box flex-row" data-num="{$list['goods_num']}" data-price="{$list['member_goods_price']}">
+                <label :for="'ch' + {$k}" class="{$list['selected'] == 1?'on':''}">
+                    <if condition="$list['selected'] eq 1">
+                        <input type="checkbox" name="" :id="'ch' + {$k}" class="choose" checked="true" value="{$list['goods_id']}">
+                    <else />
+                        <input type="checkbox" name="" :id="'ch' + {$k}" class="choose" value="{$list['goods_id']}">
+                    </if>
+                </label>
+                <a class="img" href="{:U('cosmetology/Goods/details',['id'=>$list['goods_id']])}"><img src="{:goods_thum_images($list['goods_id'],400,400)}" alt=""></a>
+                <div class="right flex-column">
+                    <a class="name" href="{:U('cosmetology/Goods/details',['id'=>$list['goods_id']])}">{$list['goods_name']}</a>
+                    <div class="spec"></div>
+                    <div class="sbot flex-row">
+                        <a class="price" href="{:U('cosmetology/Goods/details',['id'=>$list['goods_id']])}">¥{$list['member_goods_price']}</a>
+                        <div class="set-num flex-row">
+                            <div class="icon sub" id="subgoodsid{$list['goods_id']}">-</div>
+                            <div class="num">{$list['goods_num']}</div>
+                            <div class="icon add" id="addgoodsid{$list['goods_id']}">+</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="icon del" id="delid{$list['goods_id']}"></div>
+            </div>
+        </volist>
+    </div>
+    <div class="floor flex-row">
+        <div class="left flex-row">
+            <label for="ch-all" class="ch-lab flex-row">
+                <input type="checkbox" name="ch-goods" id="ch-all" class="choose-all">
+                <span></span>
+                <p>全选</p>
+            </label>
+            <div class="qian">
+                <div class="price">合计：<span id="allPrice">¥{$total['price']}</span></div>
+                <div class="p1">不含运费</div>
+            </div>
+        </div>
+        <div class="jies"><p>结算</p></div>
+    </div>
+    <if condition="$cartList eq null">
+        <div class="no-data">
+            <div class="icon-none"></div>
+            <p>购物袋空空如也</p>
+            <a href="{:U('cosmetology/Index/index')}" class="btn">去首页选购商品吧</a>
+        </div>
+    </if>
+</div>

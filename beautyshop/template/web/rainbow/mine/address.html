@@ -1,0 +1,151 @@
+<include file="public/header" title="我的地址"  body="page-address"/>
+<link rel="stylesheet" type="text/css" href="__STATIC__/tonghaoran/css/common.css">
+<link rel="stylesheet" type="text/css" href="__STATIC__/tonghaoran/css/mr_style.css">
+
+<header id="header" class="">
+    <div class="icon-back" onclick="history.back()"></div>
+    <h5>地址管理</h5>
+</header>
+
+<div class="container">
+    <if condition="$info neq null">
+        <div class="main">
+            <div class="top-line"></div>
+
+
+            <ul class="box-con " style="margin-bottom: 2rem;">
+                <volist name="info" id="list">
+                    <li class="box">
+
+                        <div class="tit flex-row">
+                            <div class="name">{$list[consignee]}</div>
+                            <!--<div class="default_address">默认</div>-->
+                            <div class="tel">{$list[mobile]}</div>
+                        </div>
+                        <div class="context">
+                            <!--<div class="tel">13627897865</div>-->
+                            <div class="address">{$regionList[$list[province]]}{$regionList[$list[city]]}{$regionList[$list[district]]}{$regionList[$list[twon]]}{$list[address]}</div>
+                        </div>
+                        <div class="box-right">
+                            <!--<div class="icon"></div>-->
+                            <label for="dz1" class="change-ads flex-row {$list[is_default] == 1?on:''}">
+                                <input type="radio" name="default_address" id="dz1" value="{$list[address_id]}" >
+                                <span></span>
+                                <p>默认地址</p>
+                            </label>
+                            <div class="right flex-row">
+                                <div class="del flex-row" id="deletes{$list[address_id]}">
+                                    <div class="icon"></div>
+                                    <p>删除</p>
+                                </div>
+                                <div class="edit flex-row">
+                                    <div class="icon"></div>
+                                    <p>编辑</p>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                </volist>                
+            </ul>
+        </div>
+    <else />
+        <div class="no-data">
+            <div class="icon"></div>
+            <p>您暂时还没有收货地址哦</p>
+        </div>
+    </if>
+
+</div>
+<div class="add-address">
+    <if condition="$url neq 1">
+        <a href="{:U('cosmetology/User/newAddress',['url'=>'firm_order_url'])}" class="add add-ads" title="">+ 新建收货地址</a>
+    <else />
+        <a href="{:U('cosmetology/User/newAddress')}" class="add add-ads" title="">+ 新建收货地址</a>
+    </if>
+</div>
+
+<div class="submit-dialog"></div>
+<div class="submit-dialog-con">
+    <div class="submit-dialog-tit">
+        提示
+    </div>
+    <div class="submit-dialog-txt">
+        确定删除？
+    </div>
+    <div class="submit-dialog-btn">
+        <div class="submit-dialog-cancel">取消</div>
+        <div class="submit-dialog-confirm">确定</div>
+    </div>
+</div>
+
+</body>
+
+<script>
+
+    $(function(){
+
+        $('.page-address .box-right .right .del').on('click', function(){
+            var box = $(this).closest(".box")
+            var address_id = $(this).attr('id').substring(7);
+            // alert(address_id)
+            $(".page-address .submit-dialog").show()
+            $(".page-address .submit-dialog-con").show()
+
+            $('.page-address .submit-dialog-btn .submit-dialog-cancel').on('click', function(){
+                $(".page-address .submit-dialog").hide()
+                $(".page-address .submit-dialog-con").hide()
+            })
+            $('.page-address .submit-dialog-btn .submit-dialog-confirm').on('click', function(){
+                $.post("{:U('cosmetology/Mine/deleteAddress')}", {address_id:address_id},function(datas){
+                    var values = JSON.parse(datas);
+                    if(values.status == 1){
+                        $(".page-address .submit-dialog").hide()
+                        $(".page-address .submit-dialog-con").hide()
+                        box.remove()
+                        boxlen()
+                    }
+                    dialogFun_two(values.msg)
+                });
+                
+            })
+        })
+
+        $(function(){
+            //设为默认地址
+            $('.page-address .change-ads input').on('change', function(){
+                $('.page-address .change-ads').removeClass('on')
+                $(this).parent().addClass('on')
+
+                var address_id = $(this).val();
+                $.post("{:U('cosmetology/Mine/defaultAddress')}", {address_id:address_id},function(datas){
+                    var values = JSON.parse(datas);
+                    var url = "{:getDeCode($url,'key')}";
+                    window.location.href=url;
+                    /*if(values.status == 1 && url != 1){
+                        var reg = /(\.html\S)/g;
+                        url = url.replace(reg, '.html?')
+                        window.location.href=url;
+                    }*/
+                });
+
+            })
+        })
+    })
+
+boxlen()
+function boxlen() {
+    console.log($(".page-address .box").length)
+    if($(".page-address .box").length == 0){
+        $(".page-address .main").hide()
+        $(".page-address .no-data").show()
+    }else {
+        $(".page-address .main").show()
+        $(".page-address .no-data").hide()
+    }
+}
+
+function dialogFun_two(str){
+    webToast(str,"middle",3000);
+}
+</script>
+</html>

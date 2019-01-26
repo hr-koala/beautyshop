@@ -1,0 +1,84 @@
+<!-- <!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="initial-scale=1,maximum-scale=1,minimum-scale=1" />
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+    <title>分类</title>
+    <link rel="stylesheet" type="text/css" href="__STATIC__/css/common.css">
+    <link rel="stylesheet" type="text/css" href="__STATIC__/css/mr_style.css">
+    <script type="text/javascript" src="__STATIC__/js/jquery.min.js"></script>
+    
+</head>
+<body class="page-classify"> -->
+<include file="public/header" title="分类"  body="page-classify"/>
+<header id="header" class="">
+    <div class="icon-back" onclick="history.back()"></div>
+    <h5>分类</h5>
+</header>
+
+<div class="container" id="all">
+    <div class="search">
+        <div class="search-box">
+            <div class="icon"></div>
+            <div class="right">
+                <input type="text" name="" value="" placeholder="请输入要搜索的关键词">
+            </div>
+        </div>
+    </div>
+
+    <div class="main flex-row">
+        <div class="nav">
+            <ul>
+                <li v-for="n in 12" :class="n === 1 ? 'on':''"><p>V脸霜</p></li>
+            </ul>
+        </div>
+        <div class="goods">
+            <div class="list">
+                <a href="" class="box flex-row" v-for="n in 12">
+                    <div class="img"><img src="__STATIC__/images/prod2.png" alt=""></div>
+                    <div class="right flex-column">
+                        <div class="name">V脸套装（V脸霜+脸神器 +唤醒面膜）</div>
+                        <div class="bot flex-row">
+                            <div class="price">¥1980</div>
+                            <div class="icon-cart"></div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            <div class="nomore flex-row">
+                <div class="xian"></div>
+                <p>到底了~</p>
+                <div class="xian"></div>
+            </div>
+        </div>
+    </div>
+
+    
+    
+</div>
+
+<footer id="footer-nav"></footer>
+<script type="text/javascript">var footerNav =  2;</script>
+<script type="text/javascript" src="__STATIC__/js/footer.js"></script>
+
+</body>
+
+<script type="text/javascript" src="__STATIC__/js/vue.js"></script>
+<script>
+
+$(function(){
+    var vm = new Vue({
+        el: '#all'
+    })
+
+    /*切换分类*/
+    $('.nav').on('click', 'ul li', function(){
+        $(this).addClass('on').siblings().removeClass('on')
+    })
+})
+
+</script>
+</html>

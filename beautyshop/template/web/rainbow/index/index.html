@@ -1,0 +1,99 @@
+<include file="public/header" title="首页"  body="page-home"/>
+
+<header id="header" class="">
+    <div class="icon-back" onclick="history.back()"></div>
+    <h5>首页</h5>
+</header>
+
+<div class="container" id="all">
+    <div class="search">
+        <form id="frm1" action="{:U('cosmetology/Goods/search')}">
+            <div class="search-box">
+                <div class="icon"></div>
+                <div class="right">
+                    <input type="search" name="name" value="" placeholder="请输入要搜索的关键词">
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <div class="swiper-container">
+        <div class="swiper-wrapper">
+            <adv pid ="2" limit="5" item="v">
+                <div class="swiper-slide"><img src="{$v[ad_code]}" alt="" style="{$v[style]}"></div>
+            </adv>
+        </div>
+        <div class="swiper-pagination"></div>
+    </div>
+
+    <div class="classify flex-row">
+        <tpshop sql="SELECT * FROM `__PREFIX__navigation` where is_show = 1 and position = 'top' ORDER BY `sort` ASC" key="k" item='v'>
+            <a class="box" href='{$v[url]}'>
+                <div class="img"><img src="{$v[navigation_picture]}" alt=""></div>
+                <p>{$v[name]}</p>
+            </a>
+        </tpshop>
+    </div>
+
+    <div class="main">
+        <div class="tit flex-row">
+            <div class="name">热卖专区</div>
+            <a href="{:U('cosmetology/Goods/search',['is_hot'=>1])}" class="more flex-row">
+                <p>查看更多</p>
+                <span class="jt-r"></span>
+            </a>
+        </div>
+        <div class="list flex-row">
+            <volist name="hot_area" id="area" offset="0" length='10'>
+                <a class="goods-item" href="{:U('cosmetology/Goods/details',['id'=>$area['goods_id']])}">
+                    <div class="img"><img src="{$area['original_img']}" alt=""></div><!-- {$_SERVER['SERVER_NAME']} -->
+                    <div class="name">{$area['goods_name']}</div>
+
+                    <if condition="$level neq null">
+                        <div class="gbot flex-row">
+                            <div class="gleft">
+                                <div class="has-price">¥{$area['shop_price']}</div>
+                                <div class="price">代理价：<span>¥{$area['shop_price']/2}</span></div>
+                            </div>
+                            <div class="icon icon-cart"></div>
+                        </div>
+                    <else />
+                        <div class="gbot flex-row">
+                            <div class="price"><span>¥{$area['shop_price']}</span></div>
+                            <div class="icon icon-cart"></div>
+                        </div>
+                    </if>
+                </a>
+            </volist>
+        </div>
+    </div>
+    <div class="nomore flex-row">
+        <div class="xian"></div>
+        <p>到底了~</p>
+        <div class="xian"></div>
+    </div>
+</div>
+<include file="public/footer"/>
+</body>
+<script type="text/javascript" src="__STATIC__/js/swiper.min.js"></script>
+<script type="text/javascript" src="__STATIC__/js/vue.js"></script>
+<script>
+
+$(function(){
+    var vm = new Vue({
+        el: '#all'
+    })
+
+    var mySwiper = new Swiper('.swiper-container', {
+        autoplay: {
+            delay: 3000
+        },
+        loop : true,
+        pagination: {
+            el: '.swiper-pagination',
+        },
+    })
+})
+
+</script>
+</html>

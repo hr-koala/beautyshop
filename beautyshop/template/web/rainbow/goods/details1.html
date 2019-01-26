@@ -1,0 +1,117 @@
+<!-- 购物车 -->
+<a href="{:U('Cart/CartList')}">购物车</a>
+<!-- 收藏 -->
+<div class="keep fr">
+	<a href="javascript:collect_goods({$goods.goods_id});" id="favorite_add">
+	    <i class=" <if condition='$collect gt 0'>red</if>"></i>
+	    <span>收藏</span>
+	</a>
+</div>
+<!-- 加入购物车/立即购买 -->
+<form name="buy_goods_form" method="post" id="buy_goods_form">
+    <input type="text" name="goods_id" value="{$goods.goods_id}"><!-- 商品id -->
+    <input type="text" name="market_price" value="{$goods.market_price}"/><!-- 商品原价 -->
+    <input type="text" name="item_id" value="5"/><!-- 商品规格id -->
+    <input type="text" name="goods_num" value="1"/><!-- 商品规格id -->
+	<div class="btns-fixed-wrap">
+	    <div class="plusshopcar-buy p btns-fixed-w100">
+	        <a id="join_cart" class="pb_plusshopcar button active_button dis_btn" href="javascript:void(0);" style="display: block;">加入购物车</a>
+	        <a id="buy_now" class="pb_buy dis_btn" href="javascript:void(0);" style="display: block;">立即购买 </a>
+	    </div>
+	</div>
+</form>
+
+<script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+<script type="text/javascript">
+	//点击收藏商品
+    function collect_goods(goods_id){
+        $.ajax({
+            type : "GET",
+            dataType: "json",
+            url:"/index.php?m=mobile&c=goods&a=collect_goods",//+tab,
+            data: {goods_id:goods_id},
+            success: function(data){
+            	alert(data.msg);
+                if(data.status == 1){
+                    //收藏点亮
+                    $('.de_font .keep').find('i').addClass('red');
+                }
+            }
+        });
+    }
+
+    //购买按钮
+    $(function () {
+        //立即购买
+        $(document).on('click', '#buy_now', function () {
+            alert($(this).hasClass('dis'));
+            if ($(this).hasClass('dis')) {
+                return;
+            }
+            if (getCookie('user_id') == '') {
+                window.location.href = "{:U('Mobile/User/login')}";
+                return;
+            }
+            var is_virtual = $("input[name='is_virtual']").val();//是否是虚拟商品
+            var exchange_integral = $("input[name='exchange_integral']").val();//是否是积分兑换商品
+            var goods_id = $("input[name='goods_id']").val();
+            var store_count = $("input[name='store_count']").attr('value');// 商品原始库存
+            var goods_num = parseInt($("input[name='goods_num']").val());
+            var goods_prom_type = $('input[name="goods_prom_type"]').attr('value');//活动商品
+            var activity_is_on = $('input[name="activity_is_on"]').attr('value'); //活动是否进行中
+            var form = $('#buy_goods_form');
+            if (is_virtual == 1) {
+                var virtual_limit = parseInt($('#virtual_limit').val());
+                if ((goods_num <= store_count && goods_num <= virtual_limit) || (goods_num < store_count && virtual_limit == 0)) {
+                    form.attr('action', "{:U('Mobile/Virtual/buy_virtual')}").submit();
+                } else {
+                    layer.open({icon: 2, content: "购买数量超过此商品购买上限", time: 2});
+                }
+                return;
+            }
+            if (exchange_integral > 0) {
+                buyIntegralGoods(goods_id, 1);
+                return;
+            }
+//            if(goods_prom_type == 4 && activity_is_on == 1){
+//                form.attr('action', "{:U('mobile/Cart/pre_sell')}").submit();
+//                return;
+//            }
+            //普通流程
+            if (goods_num <= store_count) {
+                form.attr('action', "{:U('mobile/Cart/cart2',['action'=>'buy_now'])}").submit();
+            } else {
+                layer.open({icon: 2, content: "购买数量超过此商品购买上限", time: 2});
+            }
+        })
+        
+        //加入购物车
+        $(document).on('click', '#join_cart', function () {
+            if ($(this).hasClass('dis')) {
+                return;
+            }
+            var goods_id = $("input[name='goods_id']").val();
+            var num = 1;
+            var form = $("#buy_goods_form");
+			var data;//post数据
+			if (form.length > 0) {
+				data = form.serialize();
+			} else {
+				data = {goods_id: goods_id, goods_num: num};
+			}
+			alert(data);
+            $.ajax({
+	            type : "GET",
+	            dataType: "json",
+	            url:"/index.php?m=Mobile&c=Cart&a=ajaxAddCart",
+	            data: data,
+	            success: function(data){
+	            	alert(data.msg);
+	                if(data.status == 1){
+	                    
+	                }
+	            }
+	        });
+        })
+    })
+</script>

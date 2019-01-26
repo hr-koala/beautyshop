@@ -1,0 +1,211 @@
+<include file="public/header" title="购物袋"  body="page-cart page-report-cart"/>
+<link rel="stylesheet" type="text/css" href="__STATIC__/tonghaoran/css/common.css">
+<link rel="stylesheet" type="text/css" href="__STATIC__/tonghaoran/css/mr_style.css">
+<header id="header" class="">
+    <div class="icon-back" onclick="history.back()"></div>
+    <h5>购物袋</h5>
+</header>
+
+<div class="container" id="all">
+    <div class="main">
+        <div class="list">
+            <volist name="cartList" id="list" key='k'>
+                <div class="box flex-row" data-num="{$list['goods_num']}" data-price="{$list['member_goods_price']}">
+                    <label :for="'ch' + {$k}" class="{$list['selected'] == 1?'on':''}">
+                        <if condition="$list['selected'] eq 1">
+                            <input type="checkbox" name="" :id="'ch' + {$k}" class="choose" checked="true" value="{$list['goods_id']}">
+                        <else />
+                            <input type="checkbox" name="" :id="'ch' + {$k}" class="choose" value="{$list['goods_id']}">
+                        </if>
+                    </label>
+                    <a class="img" href="{:U('cosmetology/Goods/details',['id'=>$list['goods_id']])}"><img src="{:goods_thum_images($list['goods_id'],400,400)}" alt=""></a>
+                    <div class="right flex-column">
+                        <a class="name" href="{:U('cosmetology/Goods/details',['id'=>$list['goods_id']])}">{$list['goods_name']}</a>
+                        <div class="spec"></div>
+                        <div class="sbot flex-row">
+                            <a class="price" href="{:U('cosmetology/Goods/details',['id'=>$list['goods_id']])}">¥{$list['member_goods_price']}</a>
+                            <div class="set-num flex-row">
+                                <div class="icon sub" id="subgoodsid{$list['goods_id']}">-</div>
+                                <div class="num">{$list['goods_num']}</div>
+                                <div class="icon add" id="addgoodsid{$list['goods_id']}">+</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="icon del" id="delid{$list['goods_id']}"></div>
+                </div>
+            </volist>
+        </div>
+        <!-- <if condition="$user_info[bank_note] neq 0">
+            <div class="report-curren">
+                <div class="report-curren-selet on"></div>
+                <div class="report-curren-txt">可使用的报单币：{$user_info[bank_note]}</div>
+            </div>
+        </if> -->
+        <div class="floor flex-row">
+            <div class="left flex-row">
+                <label for="ch-all" class="ch-lab flex-row">
+                    <input type="checkbox" name="ch-goods" id="ch-all" class="choose-all">
+                    <span></span>
+                    <p>全选</p>
+                </label>
+                <div class="qian">
+                    <div class="price">合计：
+                        <span id="allPrice">¥{$total['price']}</span>
+                        <input type="hidden" class="hidden_price" value="{$total['price']}">
+                    </div>
+                    <div class="p1">不含运费</div>
+                </div>
+            </div>
+            <div class="jies"><p>结算</p></div>
+        </div>
+        <if condition="$cartList eq null">
+            <input type="hidden" class="is_record" value="0">
+            <div class="no-data">
+                <div class="icon-none"></div>
+                <p>购物袋空空如也</p>
+                <a href="{:U('cosmetology/Index/index')}" class="btn">去首页选购商品吧</a>
+            </div>
+        <else />
+            <input type="hidden" class="is_record" value="1">
+        </if>
+    </div>
+    
+
+    
+</div>
+<include file="public/footer"/>
+</body>
+
+<script type="text/javascript" src="__STATIC__/js/vue.js"></script>
+<script>
+
+$(function(){
+    var vm = new Vue({
+        el: '#all'
+    })
+    countPrice()
+    // setTimeout(countPrice, 1000)
+
+    //全选
+    $('.choose-all').on('change', function(){
+        if(this.checked){
+            $.each($('.main .box .choose'), function(is, el){
+                this.checked = true
+            });
+            $('.main .box label').addClass('on')
+        }else{
+            $.each($('.main .box .choose'), function(is, el){
+                this.checked = false
+            });
+            $('.main .box label').removeClass('on')
+        }
+        countPrice()
+        $.post("{:U('cosmetology/Cart/allElection')}", {status:1},function(datas){});
+    })
+
+    //选择
+    $('.main').on('change', '.box .choose', function(){
+        var status = 0;
+        if(this.checked){
+            $(this).parent().addClass('on')
+            var status = 1;
+        }else{
+            $(this).parent().removeClass('on')
+        }
+        countPrice()
+        var goodsid = $(this).val();
+        $.post("{:U('cosmetology/Cart/pitchOn')}", {status:status,goods_id:goodsid},function(datas){});
+    })
+
+    //减数量
+    $('.main').on('click', '.box .sub', function(e){
+        var $box = $(this).closest('.box');
+        var num = parseInt($box.data('num'))
+        if(num > 1){
+            num -= 1;
+            $box.data('num', num)
+            $box.find('.num').html(num)
+            countPrice()
+            var goodsid = $(this).attr('id').substring(10);
+            $.post("{:U('cosmetology/Cart/subCart')}", {goods_id:goodsid},function(datas){});
+        }
+    })
+    //加
+    $('.main').on('click', '.box .add', function(e){
+        var $box = $(this).closest('.box');
+        var num = parseInt($box.data('num'))
+        num += 1;
+        $box.data('num', num)
+        $box.find('.num').html(num)
+        countPrice()
+        var goodsid = $(this).attr('id').substring(10);
+        $.post("{:U('cosmetology/Cart/addCart')}", {goods_id:goodsid},function(datas){});
+    })
+
+    //计算价格 显示
+    function countPrice(){
+        var box = $('.main .box');
+        var price = 0; //总价格
+        var len = 0; //选中的个数
+        $.each(box, function(is, el){
+            if($(el).find('.choose')[0].checked){
+                var num = parseInt($(el).data('num'))
+                var pr = parseFloat($(el).data('price'))
+                len++;
+                price += num * pr;
+            }
+        })
+        price = parseFloat(price.toFixed(2))
+        if(len === box.length && len !== 0){
+            $('.ch-lab').addClass('on')
+            $('#ch-all')[0].checked = true
+        }else{
+            $('.ch-lab').removeClass('on')
+            $('#ch-all')[0].checked = false
+        }
+        if(price > 0){
+            $('.floor .jies').addClass('on')
+        }else{
+            $('.floor .jies').removeClass('on')
+        }
+        $('#allPrice').html('￥' + price)
+        $('.hidden_price').val(price)
+    }
+
+    $('.main').on('click', '.box .del', function(e){
+         var goodsid = $(this).attr('id').substring(5);
+         console.log(goodsid)
+        $.post("{:U('cosmetology/Cart/delCart')}", {goods_id:goodsid},function(datas){
+            var values = JSON.parse(datas);
+            console.log(values)
+            if(values['status'] == 1){
+                $('.main').html(values['info']);
+                countPrice()
+            }
+            dialogFun_two(values['msg'])
+        });
+    })
+
+
+    //结算
+    $('.jies').click(function(){
+        var is_record = $('.is_record').val();
+        if(is_record === 0 || is_record === '0'){
+            dialogFun_two('购物车还未添加商品，请去首页添加商品吧');
+            return false;
+        }
+        var hidden_price = $('.hidden_price').val();
+        if(hidden_price === 0 || hidden_price === '0'|| hidden_price === ''){
+            dialogFun_two('请选择商品进行结算');
+            return false;
+        }
+        window.location.href = '/cosmetology/Cart/firmOrder.html';
+    })
+    
+})
+
+    function dialogFun_two(str){
+        webToast(str,"middle",3000);
+    }
+</script>
+</html>
